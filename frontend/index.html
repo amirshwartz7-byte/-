@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>מצפן — ניהול חכם לתהליך חיפוש עבודה</title>
+<style>
+  .viz-root {
+    --surface-1:      #fcfcfb;
+    --page:           #f9f9f7;
+    --text-primary:   #0b0b0b;
+    --text-secondary: #52514e;
+    --text-muted:     #898781;
+    --gridline:       #e1e0d9;
+    --border:         rgba(11,11,11,0.10);
+    --series-1:       #2a78d6;
+    --accent-violet:  #4a3aa7;
+    --accent-aqua:    #1baf7a;
+    --accent-aqua-bg: #e2f6ee;
+    --status-good:      #0ca30c;
+    --status-good-bg:   #e6f6e6;
+    --status-warning:   #b9770e;
+    --status-warning-bg:#fff3d9;
+    --status-critical:  #d03b3b;
+    --status-critical-bg:#fbe6e6;
+    --status-neutral:   #52514e;
+    --status-neutral-bg:#eeeeec;
+    --status-violet-bg: #ece9fa;
+    color-scheme: light dark;
+  }
+  @media (prefers-color-scheme: dark) {
+    .viz-root {
+      --surface-1:      #1a1a19;
+      --page:           #0d0d0d;
+      --text-primary:   #ffffff;
+      --text-secondary: #c3c2b7;
+      --text-muted:     #898781;
+      --gridline:       #2c2c2a;
+      --border:         rgba(255,255,255,0.10);
+      --series-1:       #3987e5;
+      --accent-violet:  #9085e9;
+      --accent-aqua:    #199e70;
+      --accent-aqua-bg: #103322;
+      --status-good:      #0ca30c;
+      --status-good-bg:   #123312;
+      --status-warning:   #fab219;
+      --status-warning-bg:#3a2c08;
+      --status-critical:  #e66767;
+      --status-critical-bg:#3a1414;
+      --status-neutral:   #c3c2b7;
+      --status-neutral-bg:#2a2a28;
+      --status-violet-bg: #241f42;
+    }
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--page); font-family: system-ui, -apple-system, "Segoe UI", sans-serif; color: var(--text-primary); }
+  a { color: var(--series-1); }
+  .viz-root { max-width: 1100px; margin: 0 auto; padding: 0 0 60px; }
+
+  .appbar { position: sticky; top: 0; z-index: 10; display: flex; justify-content: space-between; align-items: center; padding: 14px 20px; background: var(--surface-1); border-bottom: 1px solid var(--border); }
+  .brand { display: flex; align-items: center; gap: 9px; font-weight: 700; font-size: 17px; }
+  .brand .dot { width: 10px; height: 10px; border-radius: 50%; background: var(--series-1); flex-shrink: 0; }
+  .brand small { font-weight: 500; font-size: 11.5px; color: var(--text-muted); display: block; }
+  .appbar-right { display: flex; align-items: center; gap: 10px; }
+  .sync-badge { font-size: 11px; padding: 5px 11px; border-radius: 999px; background: var(--status-good-bg); color: var(--status-good); display: flex; align-items: center; gap: 6px; font-weight: 600; white-space: nowrap; }
+  .sync-badge.off { background: var(--status-neutral-bg); color: var(--status-neutral); }
+  .sync-badge .dot2 { width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+  .refresh-btn, .logout-btn { font-size: 12px; color: var(--text-secondary); background: none; border: 1px solid var(--border); border-radius: 8px; padding: 6px 12px; cursor: pointer; font-family: inherit; }
+  .refresh-btn:hover, .logout-btn:hover { background: var(--gridline); }
+
+  .tabnav { display: flex; gap: 4px; padding: 10px 20px; background: var(--surface-1); border-bottom: 1px solid var(--border); position: sticky; top: 57px; z-index: 9; overflow-x: auto; }
+  .tabnav button { font-family: inherit; font-size: 13.5px; font-weight: 600; padding: 8px 16px; border-radius: 8px; border: none; background: none; color: var(--text-secondary); cursor: pointer; white-space: nowrap; }
+  .tabnav button.active { background: var(--text-primary); color: var(--surface-1); }
+  .tabnav button:not(.active):hover { background: var(--gridline); }
+
+  main { padding: 24px 20px 0; }
+  .tab-panel { display: none; }
+  .tab-panel.active { display: block; }
+
+  section { margin-top: 34px; }
+  section:first-child { margin-top: 0; }
+  h2 { font-size: 18px; margin: 0 0 14px; }
+  h3 { font-size: 14px; margin: 0 0 10px; color: var(--text-secondary); font-weight: 600; }
+  .section-sub { font-size: 12.5px; color: var(--text-muted); margin: -10px 0 16px; }
+
+  .kpis { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+  .kpi-tile { background: var(--surface-1); border: 1px solid var(--border); border-radius: 12px; padding: 16px 18px; }
+  .kpi-tile .value { font-size: 28px; font-weight: 700; line-height: 1.1; }
+  .kpi-tile .label { font-size: 13px; color: var(--text-secondary); margin-top: 6px; }
+
+  .chart-card { background: var(--surface-1); border: 1px solid var(--border); border-radius: 12px; padding: 18px 20px 12px; }
+  .chart-card-head { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 14px; }
+  .chart-card-head h2 { margin: 0; }
+  .toggle-btn { font-size: 12px; color: var(--text-secondary); background: none; border: 1px solid var(--border); border-radius: 8px; padding: 5px 10px; cursor: pointer; font-family: inherit; }
+  .toggle-btn:hover { background: var(--gridline); }
+  .bars-wrap { display: flex; flex-direction: row-reverse; align-items: flex-end; gap: 6px; height: 140px; border-bottom: 1px solid var(--gridline); padding-bottom: 4px; }
+  .bar-col { flex: 1; display: flex; flex-direction: column; align-items: center; height: 100%; justify-content: flex-end; position: relative; }
+  .bar { width: 100%; max-width: 34px; background: var(--series-1); border-radius: 4px 4px 0 0; position: relative; cursor: pointer; min-height: 3px; }
+  .bar:hover { opacity: 0.85; }
+  .bar .tip { display: none; position: absolute; bottom: 100%; right: 50%; transform: translateX(50%); margin-bottom: 6px; background: var(--text-primary); color: var(--surface-1); font-size: 11px; padding: 4px 7px; border-radius: 6px; white-space: nowrap; z-index: 2; }
+  .bar:hover .tip { display: block; }
+  .bar-labels { display: flex; flex-direction: row-reverse; gap: 6px; margin-top: 6px; }
+  .bar-label { flex: 1; text-align: center; font-size: 10px; color: var(--text-muted); max-width: 34px; }
+  .chart-note { font-size: 12px; color: var(--text-muted); margin-top: 10px; }
+
+  .filter-chips { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; }
+  .chip { font-size: 12px; padding: 6px 12px; border-radius: 999px; border: 1px solid var(--border); background: var(--surface-1); color: var(--text-secondary); cursor: pointer; font-family: inherit; }
+  .chip.active { background: var(--text-primary); color: var(--surface-1); border-color: var(--text-primary); }
+  .chip-select { display: flex; flex-wrap: wrap; gap: 8px; }
+  .chip-option { font-size: 12.5px; padding: 7px 13px; border-radius: 999px; border: 1px solid var(--border); background: var(--surface-1); color: var(--text-secondary); cursor: pointer; font-family: inherit; }
+  .chip-option.selected { background: var(--series-1); color: #fff; border-color: var(--series-1); }
+
+  .pipeline-grid, .recs-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 14px; }
+  .card { background: var(--surface-1); border: 1px solid var(--border); border-radius: 12px; padding: 16px; display: flex; flex-direction: column; gap: 8px; }
+  .card-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; }
+  .card-head .co { font-size: 15px; font-weight: 700; }
+  .card .role { font-size: 13px; color: var(--text-secondary); }
+  .card .desc { font-size: 12.5px; color: var(--text-secondary); line-height: 1.5; }
+  .badge { font-size: 11px; font-weight: 600; padding: 3px 9px; border-radius: 999px; white-space: nowrap; }
+  .badge.applied { background: var(--status-neutral-bg); color: var(--status-neutral); }
+  .badge.interviewing { background: var(--status-good-bg); color: var(--status-good); }
+  .badge.awaiting { background: var(--status-warning-bg); color: var(--status-warning); }
+  .badge.rejected { background: var(--status-critical-bg); color: var(--status-critical); }
+  .badge.explore { background: var(--status-violet-bg); color: var(--accent-violet); }
+  .badge.candidate { background: var(--accent-aqua-bg); color: var(--accent-aqua); }
+  .card ul.timeline { list-style: none; margin: 4px 0 0; padding: 0; font-size: 12.5px; color: var(--text-secondary); display: flex; flex-direction: column; gap: 4px; }
+  .card ul.timeline li { padding-right: 12px; position: relative; }
+  .card ul.timeline li::before { content: ""; position: absolute; right: 0; top: 6px; width: 5px; height: 5px; border-radius: 50%; background: var(--text-muted); }
+  .card .meta { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+
+  .match-badge { font-size: 12.5px; font-weight: 700; color: var(--series-1); white-space: nowrap; }
+  .match-track { height: 6px; border-radius: 3px; background: var(--gridline); overflow: hidden; }
+  .match-fill { height: 100%; background: var(--series-1); border-radius: 3px; }
+  .btn { font-size: 12.5px; font-weight: 600; padding: 8px 14px; border-radius: 8px; border: none; background: var(--text-primary); color: var(--surface-1); cursor: pointer; font-family: inherit; align-self: flex-start; margin-top: 4px; }
+  .btn:hover { opacity: 0.88; }
+  .btn:disabled { opacity: 0.5; cursor: default; }
+  .btn.secondary { background: none; border: 1px solid var(--border); color: var(--text-primary); }
+  .empty-note { font-size: 13px; color: var(--text-muted); }
+
+  .alert { display: flex; gap: 10px; align-items: flex-start; padding: 12px 14px; border-radius: 10px; background: var(--status-warning-bg); border: 1px solid var(--border); font-size: 13px; margin-bottom: 10px; }
+  .alert strong { color: var(--status-warning); }
+
+  .events-columns { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  .event-item { background: var(--surface-1); border: 1px solid var(--border); border-radius: 10px; padding: 12px 14px; margin-bottom: 10px; }
+  .event-item .ttl { font-weight: 600; font-size: 13.5px; }
+  .event-item .when { font-size: 12px; color: var(--text-secondary); margin-top: 3px; }
+  .event-item .loc { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+  .event-item .status-tag { display: inline-block; margin-top: 6px; font-size: 11px; padding: 2px 8px; border-radius: 999px; }
+  .event-item.past .status-tag { background: var(--status-neutral-bg); color: var(--status-neutral); }
+  .event-item.future .status-tag { background: var(--status-good-bg); color: var(--status-good); }
+
+  .search-row { margin-bottom: 12px; }
+  .search-row input { width: 100%; max-width: 320px; padding: 8px 12px; border-radius: 8px; border: 1px solid var(--border); background: var(--surface-1); color: var(--text-primary); font-family: inherit; font-size: 13px; }
+  table.calls { width: 100%; border-collapse: collapse; background: var(--surface-1); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; font-size: 13px; }
+  table.calls th { text-align: right; font-size: 11.5px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.03em; padding: 10px 12px; border-bottom: 1px solid var(--gridline); }
+  table.calls td { text-align: right; padding: 9px 12px; border-bottom: 1px solid var(--gridline); color: var(--text-secondary); }
+  table.calls tr:last-child td { border-bottom: none; }
+  table.calls td.name { color: var(--text-primary); font-weight: 600; }
+  .channel-tag { font-size: 11px; padding: 2px 8px; border-radius: 999px; background: var(--status-neutral-bg); color: var(--status-neutral); }
+
+  .profile-card { background: var(--surface-1); border: 1px solid var(--border); border-radius: 12px; padding: 22px; }
+  .profile-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+  .field { margin-bottom: 20px; }
+  .field label { display: block; font-size: 13px; font-weight: 600; margin-bottom: 8px; }
+  .field .hint { font-size: 11.5px; color: var(--text-muted); margin-top: 5px; }
+  .field input[type="text"], .field textarea { width: 100%; padding: 9px 12px; border-radius: 8px; border: 1px solid var(--border); background: var(--page); color: var(--text-primary); font-family: inherit; font-size: 13px; }
+  .field textarea { resize: vertical; min-height: 64px; }
+  .range-row { display: flex; align-items: center; gap: 12px; }
+  .range-row input[type="range"] { flex: 1; }
+  .range-val { font-weight: 700; font-size: 14px; min-width: 90px; }
+  .apply-row { display: flex; justify-content: flex-start; margin-top: 6px; gap: 10px; }
+
+  .toast { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: var(--text-primary); color: var(--surface-1); padding: 11px 20px; border-radius: 10px; font-size: 13px; z-index: 50; opacity: 0; transition: opacity .25s; pointer-events: none; max-width: 90vw; text-align: center; }
+  .toast.show { opacity: 1; }
+
+  .about-note { font-size: 12.5px; color: var(--text-muted); line-height: 1.7; background: var(--surface-1); border: 1px solid var(--border); border-radius: 12px; padding: 16px 18px; }
+  footer.note { margin-top: 40px; font-size: 12px; color: var(--text-muted); border-top: 1px solid var(--gridline); padding: 16px 20px 30px; line-height: 1.6; }
+
+  /* Login screen */
+  .login-screen { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px; }
+  .login-card { max-width: 420px; width: 100%; background: var(--surface-1); border: 1px solid var(--border); border-radius: 16px; padding: 32px 28px; text-align: center; }
+  .login-card .brand { justify-content: center; margin-bottom: 6px; font-size: 22px; }
+  .login-card p { color: var(--text-secondary); font-size: 13.5px; line-height: 1.7; margin: 14px 0 22px; }
+  .login-btn { width: 100%; padding: 12px; border-radius: 10px; border: none; background: var(--text-primary); color: var(--surface-1); font-family: inherit; font-size: 14px; font-weight: 600; cursor: pointer; }
+  .login-btn:hover { opacity: 0.9; }
+  .login-mock-note { font-size: 11px; color: var(--text-muted); margin-top: 14px; }
+  .hidden { display: none !important; }
+  .loading-note { font-size: 13px; color: var(--text-muted); padding: 40px; text-align: center; }
+
+  @media (max-width: 700px) {
+    .kpis { grid-template-columns: repeat(2, 1fr); }
+    .events-columns { grid-template-columns: 1fr; }
+    .profile-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ===== LOGIN SCREEN ===== -->
+<div class="login-screen" id="login-screen">
+  <div class="login-card">
+    <div class="brand"><span class="dot" style="background:#2a78d6;width:12px;height:12px;border-radius:50%;display:inline-block;"></span> מצפן</div>
+    <p>ניהול חכם לתהליך חיפוש עבודה — צינור חברות, שיחות נטוורקינג ואירועים במקום אחד, עם מנוע המלצות מבוסס פרופיל אישי.</p>
+    <button class="login-btn" id="login-btn">התחבר עם Google (Demo)</button>
+    <div class="login-mock-note">זהו חיבור מדומה (Mock OAuth) לצורך הדגמה מקומית של אפליקציית ה-backend האמיתית. בפרודקשן זו תהיה זרימת Google OAuth 2.0 אמיתית מול Gmail/Calendar — ראו PRD סעיף 9.2.</div>
+  </div>
+</div>
+
+<!-- ===== APP ===== -->
+<div class="viz-root hidden" id="app-root">
+
+  <div class="appbar">
+    <div class="brand"><span class="dot"></span><span>מצפן<br><small>ניהול חכם לתהליך חיפוש עבודה</small></span></div>
+    <div class="appbar-right">
+      <span class="sync-badge" id="sync-badge"><span class="dot2"></span> מחובר (Demo)</span>
+      <button class="refresh-btn" id="refresh-btn">רענן נתונים</button>
+      <button class="logout-btn" id="logout-btn">התנתק</button>
+    </div>
+  </div>
+
+  <div class="tabnav" id="tabnav">
+    <button class="active" data-tab="profile">הפרופיל שלי</button>
+    <button data-tab="dashboard">דשבורד</button>
+    <button data-tab="recs">המלצות עבורי</button>
+  </div>
+
+  <main>
+    <!-- ===== TAB: PROFILE ===== -->
+    <section class="tab-panel active" id="tab-profile">
+      <h2>הפרופיל שלי</h2>
+      <p class="section-sub">ההמלצות בטאב "המלצות עבורי" נגזרות ישירות מהפרופיל הזה, שנשמר בפועל בשרת (SQLite). עדכן ולחץ על "שמור ועדכן המלצות".</p>
+      <div class="profile-card">
+        <div class="profile-grid">
+          <div>
+            <div class="field"><label>תפקידי יעד</label><div class="chip-select" id="roles-select"></div></div>
+            <div class="field"><label>תעשיות מועדפות</label><div class="chip-select" id="industries-select"></div></div>
+            <div class="field"><label>שלבי מימון מועדפים</label><div class="chip-select" id="stages-select"></div></div>
+          </div>
+          <div>
+            <div class="field">
+              <label>גודל חברה מקסימלי (מס' עובדים)</label>
+              <div class="range-row">
+                <input type="range" id="teamMax" min="5" max="150" value="30">
+                <span class="range-val"><span id="teamMaxVal">30</span> עובדים</span>
+              </div>
+              <div class="hint">חברות עם יותר עובדים מהסף הזה לא יומלצו</div>
+            </div>
+            <div class="field"><label>מיקום מועדף</label><input type="text" id="location-input"></div>
+            <div class="field"><label>ה-Superpower שלי (חופשי)</label><textarea id="superpower-input"></textarea></div>
+          </div>
+        </div>
+        <div class="apply-row">
+          <button class="btn" id="apply-profile-btn">שמור ועדכן המלצות</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== TAB: DASHBOARD ===== -->
+    <section class="tab-panel" id="tab-dashboard">
+      <section class="kpis" style="margin-top:0;">
+        <div class="kpi-tile"><div class="value"><span id="kpi-companies">–</span></div><div class="label">חברות בתהליך פעיל (מתוך <span id="kpi-companies-total">–</span>)</div></div>
+        <div class="kpi-tile"><div class="value"><span id="kpi-interviews">4</span></div><div class="label">ראיונות שהתקיימו</div></div>
+        <div class="kpi-tile"><div class="value"><span id="kpi-calls">–</span></div><div class="label">שיחות/פגישות נטוורקינג</div></div>
+        <div class="kpi-tile"><div class="value"><span id="kpi-events">– / –</span></div><div class="label">אירועי נטוורקינג: עברו / עתידיים</div></div>
+      </section>
+
+      <section class="activity-chart">
+        <div class="chart-card">
+          <div class="chart-card-head"><h2>עומס פעילות חיפוש עבודה לפי יום</h2></div>
+          <div class="bars-wrap" id="bars-wrap"></div>
+          <div class="bar-labels" id="bar-labels"></div>
+          <p class="chart-note">מחושב בזמן אמת מצירי הזמן של הצינור ומטבלת השיחות — לא נתון קבוע. כל פעולה שתבצע בטאב ההמלצות תשפיע על הגרף הזה.</p>
+        </div>
+      </section>
+
+      <section class="pipeline">
+        <h2>תהליך גיוס לפי חברה</h2>
+        <div class="filter-chips" id="filter-chips"></div>
+        <div class="pipeline-grid" id="pipeline-grid"></div>
+      </section>
+
+      <section class="events">
+        <h2>אירועי נטוורקינג</h2>
+        <div class="events-columns">
+          <div class="events-col"><h3>עברו</h3><div id="events-past"></div></div>
+          <div class="events-col"><h3>עתידיים — נרשמת</h3><div id="events-future"></div></div>
+        </div>
+      </section>
+
+      <section class="calls">
+        <h2>שיחות ופגישות נטוורקינג</h2>
+        <div class="search-row"><input type="text" id="call-search" placeholder="חיפוש לפי שם או הקשר…"></div>
+        <table class="calls" id="calls-table">
+          <thead><tr><th>תאריך</th><th>איש קשר</th><th>ערוץ</th><th>הקשר</th></tr></thead>
+          <tbody id="calls-body"></tbody>
+        </table>
+      </section>
+    </section>
+
+    <!-- ===== TAB: RECOMMENDATIONS ===== -->
+    <section class="tab-panel" id="tab-recs">
+      <section style="margin-top:0;">
+        <h2>התראות מהצינור</h2>
+        <p class="section-sub">מחושב אוטומטית מפערי זמן בתהליכים קיימים על השרת (recommendations.py) — לא ידני.</p>
+        <div id="pipeline-alerts"></div>
+      </section>
+      <section>
+        <h2>חברות מומלצות לפנייה</h2>
+        <p class="section-sub">מבוסס על התאמה בין הפרופיל שלך לבין מאגר חברות (בדמו זה: 5 סטארטאפים ישראליים אמיתיים בשלבי Pre-Seed/Seed, מאומתים ממקורות פומביים).</p>
+        <div class="recs-grid" id="company-recs"></div>
+      </section>
+      <section>
+        <h2>אנשים מומלצים לפנייה חדשה</h2>
+        <p class="section-sub">מייסדים של החברות המומלצות למעלה — קשרים חדשים שטרם יצרת.</p>
+        <div class="recs-grid" id="people-recs-new"></div>
+      </section>
+      <section>
+        <h2>פולואפ מומלץ עם קשרים קיימים</h2>
+        <p class="section-sub">מחושב אוטומטית לפי פערי זמן מאז המגע האחרון בטבלת השיחות שלך.</p>
+        <div class="recs-grid" id="followup-recs"></div>
+      </section>
+      <section>
+        <h2>אירועים מומלצים למעקב</h2>
+        <div class="recs-grid" id="event-recs"></div>
+      </section>
+      <section>
+        <div class="about-note">
+          <strong>מה אמיתי כאן ומה עדיין דורש חשבונות חיצוניים:</strong> זהו backend אמיתי (Flask + SQLite) שרץ מקומית — הנתונים נשמרים בפועל בין רענוני דף (בדוק: הוסף חברה, רענן את העמוד, היא עדיין שם). מה שעדיין דורש חיבור אמיתי לשירותים חיצוניים: (1) Google OAuth אמיתי במקום כפתור ה-Demo — דורש חשבון Google Cloud מאומת (ראו PRD סעיף 9.2), (2) מאגר חברות חי במקום 5 הדוגמאות — דורש מפתח API בתשלום (Harmonic/Crunchbase/Apollo).
+        </div>
+      </section>
+    </section>
+  </main>
+
+  <footer class="note">
+    זהו ה-MVP הריצתי בפועל של מצפן, לפי מסמך ה-PRD — Flask backend + SQLite, ממשק שמדבר עם REST API אמיתי. קוד המקור המלא נמצא בתיקייה שקיבלת יחד עם קובץ זה.
+  </footer>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+  const API = '/api';
+  let PROFILE = null;
+
+  const ALL_ROLES = ['VP Operations', 'COO', 'Director of Operations', 'Head of PMO', 'Director Operational Excellence'];
+  const ALL_INDUSTRIES = ['E-commerce ולוגיסטיקה', 'RegTech / FinCrime', 'סייבר', 'AI / no-code', 'פינטק'];
+  const ALL_STAGES = ['Pre-Seed', 'Seed', 'Series A'];
+
+  const statusLabels = {
+    applied: 'הוגשה מועמדות', interviewing: 'ראיון מתוכנן', awaiting: 'ממתין לתשובה',
+    rejected: 'נדחה', explore: 'נטוורקינג / חקירה', candidate: 'מועמד לפנייה (מומלץ)'
+  };
+  let currentFilter = 'all';
+
+  async function api(path, opts = {}) {
+    const res = await fetch(API + path, {
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'same-origin',
+      ...opts,
+    });
+    if (res.status === 401) { showLogin(); throw new Error('not authenticated'); }
+    if (!res.ok && res.status !== 409) throw new Error('API error ' + res.status);
+    return res.json();
+  }
+
+  function showLogin() {
+    document.getElementById('login-screen').classList.remove('hidden');
+    document.getElementById('app-root').classList.add('hidden');
+  }
+  function showApp() {
+    document.getElementById('login-screen').classList.add('hidden');
+    document.getElementById('app-root').classList.remove('hidden');
+  }
+
+  async function doMockLogin() {
+    try {
+      await api('/auth/mock-login', { method: 'POST' });
+      showApp();
+      await bootApp();
+      showToast('התחברת בהצלחה (Demo) — הנתונים נטענו מהשרת');
+    } catch (e) { console.error(e); }
+  }
+  async function doLogout() {
+    await api('/auth/logout', { method: 'POST' });
+    showLogin();
+  }
+  async function checkSession() {
+    try { await api('/me'); showApp(); await bootApp(); }
+    catch (e) { showLogin(); }
+  }
+
+  function switchTab(name) {
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    document.getElementById('tab-' + name).classList.add('active');
+    document.querySelectorAll('#tabnav button').forEach(b => b.classList.toggle('active', b.dataset.tab === name));
+  }
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg; t.classList.add('show');
+    clearTimeout(t._timer);
+    t._timer = setTimeout(() => t.classList.remove('show'), 2600);
+  }
+  function mockRefresh() {
+    showToast('בגרסת הפרודקשן זה ימשוך נתונים חיים מ-Gmail/Calendar API. בדמו זה השרת כבר מחזיק את הנתונים ב-SQLite.');
+  }
+
+  /* ---------- Profile ---------- */
+  function buildChipGroup(containerEl, options, selectedArr) {
+    containerEl.innerHTML = options.map(o => `<button type="button" class="chip-option ${selectedArr.includes(o) ? 'selected' : ''}" data-val="${o}">${o}</button>`).join('');
+    containerEl.querySelectorAll('.chip-option').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const v = btn.dataset.val; const idx = selectedArr.indexOf(v);
+        if (idx > -1) { selectedArr.splice(idx, 1); btn.classList.remove('selected'); }
+        else { selectedArr.push(v); btn.classList.add('selected'); }
+      });
+    });
+  }
+  async function loadProfile() {
+    PROFILE = await api('/profile');
+    buildChipGroup(document.getElementById('roles-select'), ALL_ROLES, PROFILE.target_roles);
+    buildChipGroup(document.getElementById('industries-select'), ALL_INDUSTRIES, PROFILE.industries);
+    buildChipGroup(document.getElementById('stages-select'), ALL_STAGES, PROFILE.stages);
+    document.getElementById('teamMax').value = PROFILE.team_size_max;
+    document.getElementById('teamMaxVal').textContent = PROFILE.team_size_max;
+    document.getElementById('location-input').value = PROFILE.location || '';
+    document.getElementById('superpower-input').value = PROFILE.superpower || '';
+  }
+  async function applyProfile() {
+    const body = {
+      target_roles: PROFILE.target_roles, industries: PROFILE.industries, stages: PROFILE.stages,
+      team_size_max: Number(document.getElementById('teamMax').value),
+      location: document.getElementById('location-input').value,
+      superpower: document.getElementById('superpower-input').value,
+    };
+    await api('/profile', { method: 'PUT', body: JSON.stringify(body) });
+    await loadRecommendations();
+    switchTab('recs');
+    showToast('הפרופיל נשמר בשרת וההמלצות עודכנו');
+  }
+
+  /* ---------- Dashboard: pipeline ---------- */
+  async function loadPipeline() {
+    const data = await api('/pipeline');
+    renderPipeline(data.items);
+  }
+  function renderPipeline(items) {
+    const grid = document.getElementById('pipeline-grid');
+    grid.innerHTML = items.map(p => `
+      <div class="card" data-status="${p.status}">
+        <div class="card-head"><span class="co">${p.name}</span><span class="badge ${p.status}">${statusLabels[p.status] || p.status}</span></div>
+        <div class="role">${p.role || ''}</div>
+        <ul class="timeline">${p.timeline.map(t => `<li>${t.event_date} — ${t.text}</li>`).join('')}</ul>
+        ${p.meta ? `<div class="meta">${p.meta}</div>` : ''}
+      </div>
+    `).join('');
+    const counts = {};
+    items.forEach(p => counts[p.status] = (counts[p.status] || 0) + 1);
+    const order = ['applied', 'interviewing', 'awaiting', 'rejected', 'explore', 'candidate'];
+    let html = `<button class="chip ${currentFilter === 'all' ? 'active' : ''}" data-filter="all">הכל (${items.length})</button>`;
+    order.forEach(key => { if (counts[key]) html += `<button class="chip ${currentFilter === key ? 'active' : ''}" data-filter="${key}">${statusLabels[key]} (${counts[key]})</button>`; });
+    document.getElementById('filter-chips').innerHTML = html;
+    applyActiveFilter();
+    document.getElementById('kpi-companies').textContent = items.filter(p => p.status !== 'rejected').length;
+    document.getElementById('kpi-companies-total').textContent = items.length;
+  }
+  function applyActiveFilter() {
+    document.querySelectorAll('#pipeline-grid .card').forEach(card => {
+      card.style.display = (currentFilter === 'all' || card.dataset.status === currentFilter) ? '' : 'none';
+    });
+  }
+  document.getElementById('filter-chips').addEventListener('click', e => {
+    const btn = e.target.closest('.chip'); if (!btn) return;
+    currentFilter = btn.dataset.filter; applyActiveFilter();
+    document.querySelectorAll('#filter-chips .chip').forEach(c => c.classList.toggle('active', c.dataset.filter === currentFilter));
+  });
+
+  /* ---------- Dashboard: contacts ---------- */
+  let ALL_CONTACTS = [];
+  async function loadContacts() {
+    const data = await api('/contacts');
+    ALL_CONTACTS = data.contacts;
+    renderCalls(ALL_CONTACTS);
+    document.getElementById('kpi-calls').textContent = ALL_CONTACTS.length;
+  }
+  function renderCalls(list) {
+    document.getElementById('calls-body').innerHTML = list.map(c => `
+      <tr><td>${c.contact_date}</td><td class="name">${c.name}</td><td><span class="channel-tag">${c.channel}</span></td><td>${c.context}</td></tr>
+    `).join('');
+  }
+  async function filterCalls() {
+    const q = document.getElementById('call-search').value.trim();
+    const data = await api('/contacts' + (q ? '?q=' + encodeURIComponent(q) : ''));
+    renderCalls(data.contacts);
+  }
+
+  /* ---------- Dashboard: events ---------- */
+  async function loadEvents() {
+    const data = await api('/networking-events');
+    const past = data.events.filter(e => e.kind === 'past');
+    const future = data.events.filter(e => e.kind === 'future');
+    document.getElementById('events-past').innerHTML = past.map(eventCard).join('');
+    document.getElementById('events-future').innerHTML = future.map(eventCard).join('');
+    document.getElementById('kpi-events').textContent = `${past.length} / ${future.length}`;
+  }
+  function eventCard(e) {
+    return `<div class="event-item ${e.kind}">
+      <div class="ttl">${e.title}</div>
+      <div class="when">${e.when_text}</div>
+      <div class="loc">${e.location || ''}</div>
+      <span class="status-tag">${e.status_tag}</span>
+    </div>`;
+  }
+
+  /* ---------- Dashboard: activity chart ---------- */
+  async function loadActivity() {
+    const data = await api('/activity');
+    renderChart(data.series);
+  }
+  function renderChart(series) {
+    const maxN = Math.max(...series.map(a => a.count), 1);
+    const barsWrap = document.getElementById('bars-wrap');
+    const barLabels = document.getElementById('bar-labels');
+    barsWrap.innerHTML = ''; barLabels.innerHTML = '';
+    series.forEach(a => {
+      const col = document.createElement('div'); col.className = 'bar-col';
+      const bar = document.createElement('div'); bar.className = 'bar';
+      bar.style.height = Math.max(4, Math.round((a.count / maxN) * 120)) + 'px';
+      const tip = document.createElement('div'); tip.className = 'tip'; tip.textContent = a.date + ': ' + a.count + ' פעילויות';
+      bar.appendChild(tip); col.appendChild(bar); barsWrap.appendChild(col);
+      const shortLabel = a.date.slice(5).split('-').reverse().join('.');
+      const lbl = document.createElement('div'); lbl.className = 'bar-label'; lbl.textContent = shortLabel; barLabels.appendChild(lbl);
+    });
+  }
+
+  /* ---------- Recommendations ---------- */
+  const CACHE = { companies: [], people: [], followups: [], events: [] };
+  async function loadRecommendations() {
+    const data = await api('/recommendations');
+    CACHE.companies = data.companies; CACHE.people = data.people;
+    CACHE.followups = data.followups; CACHE.events = data.events;
+    renderAlerts(data.alerts);
+    renderCompanyRecs(data.companies);
+    renderPeopleRecs(data.people);
+    renderFollowUps(data.followups);
+    renderEventRecs(data.events);
+  }
+  function renderAlerts(alerts) {
+    const wrap = document.getElementById('pipeline-alerts');
+    if (!alerts.length) { wrap.innerHTML = '<p class="empty-note">אין כרגע התראות — כל התהליכים הפעילים עדכניים.</p>'; return; }
+    wrap.innerHTML = alerts.map(x => `
+      <div class="alert">⏱ <div><strong>${x.name}</strong> — לא התקבל עדכון כבר ${x.diff_days} ימים מאז "${x.last_text}". שקול לשלוח מייל מעקב עדין.</div></div>
+    `).join('');
+  }
+  function renderCompanyRecs(companies) {
+    const wrap = document.getElementById('company-recs');
+    if (!companies.length) { wrap.innerHTML = '<p class="empty-note">אין כרגע התאמות — נסה להרחיב את טווח גודל הצוות או את התעשיות בפרופיל.</p>'; return; }
+    wrap.innerHTML = companies.map((c, i) => `
+      <div class="card">
+        <div class="card-head"><span class="co">${c.name}</span><span class="match-badge">${c.score}% התאמה</span></div>
+        <div class="match-track"><div class="match-fill" style="width:${c.score}%"></div></div>
+        <div class="role">${c.industry} · ${c.stage} · כ-${c.team_size} עובדים</div>
+        <div class="desc">${c.description}</div>
+        <ul class="timeline">${c.reasons.map(r => `<li>${r}</li>`).join('')}</ul>
+        <div class="meta">מייסד: ${c.founder} (${c.founder_role}) · <a href="${c.source_url}" target="_blank" rel="noopener">מקור</a></div>
+        <button class="btn" ${c.already_added ? 'disabled' : ''} data-action="add-company" data-index="${i}">${c.already_added ? '✓ נוסף לצינור' : 'הוסף לצינור'}</button>
+      </div>
+    `).join('');
+  }
+  function renderPeopleRecs(people) {
+    const wrap = document.getElementById('people-recs-new');
+    if (!people.length) { wrap.innerHTML = '<p class="empty-note">אין כרגע אנשים מומלצים חדשים בהתאם לפרופיל.</p>'; return; }
+    wrap.innerHTML = people.map((p, i) => `
+      <div class="card">
+        <div class="card-head"><span class="co">${p.founder}</span><span class="match-badge">${p.score}% התאמה</span></div>
+        <div class="role">${p.founder_role} · ${p.company_name}</div>
+        <div class="desc">מומלץ כי ${p.company_name} תואמת את הפרופיל שהגדרת (${p.industry}, ${p.stage}).</div>
+        <button class="btn secondary" ${p.already_contacted ? 'disabled' : ''} data-action="mark-contacted" data-index="${i}">${p.already_contacted ? '✓ סומן קשר' : 'סמן שיצרתי קשר'}</button>
+      </div>
+    `).join('');
+  }
+  function renderFollowUps(followups) {
+    const wrap = document.getElementById('followup-recs');
+    if (!followups.length) { wrap.innerHTML = '<p class="empty-note">אין כרגע קשרים שדורשים פולואפ — כל השיחות טריות יחסית.</p>'; return; }
+    wrap.innerHTML = followups.map((f, i) => `
+      <div class="card">
+        <div class="card-head"><span class="co">${f.name}</span><span class="badge awaiting">${f.diff_days} ימים ללא מגע</span></div>
+        <div class="desc">שיחה אחרונה (${f.date_str}): ${f.context}</div>
+        <button class="btn secondary" data-action="mark-followup" data-index="${i}">סמן שביצעתי פולואפ</button>
+      </div>
+    `).join('');
+  }
+  function renderEventRecs(events) {
+    document.getElementById('event-recs').innerHTML = events.map((e, i) => `
+      <div class="card">
+        <div class="card-head"><span class="co">${e.name}</span></div>
+        <div class="desc">${e.desc}</div>
+        ${e.link ? `<button class="btn secondary" data-action="open-link" data-index="${i}">בקר באתר</button>` : ''}
+      </div>
+    `).join('');
+  }
+
+  async function addCompanyToPipeline(companyId) {
+    const res = await api('/pipeline', { method: 'POST', body: JSON.stringify({ company_id: companyId }) });
+    if (res.error === 'already_added') { showToast('החברה כבר בצינור שלך'); return; }
+    renderPipeline(res.items);
+    await loadRecommendations();
+    await loadActivity();
+    showToast('החברה נוספה לצינור הגיוס שלך ונשמרה בשרת');
+  }
+  async function markContacted(companyId, founderName, companyName) {
+    await api('/contacts', { method: 'POST', body: JSON.stringify({ name: founderName, channel: 'לינקדאין', context: 'קשר ראשוני עם ' + companyName + ' — מומלץ על ידי המערכת' }) });
+    await loadContacts();
+    await loadRecommendations();
+    showToast('סומן קשר עם ' + founderName);
+  }
+  async function markFollowUpDone(name) {
+    await api('/contacts', { method: 'POST', body: JSON.stringify({ name: name, channel: 'טלפון', context: 'פולואפ יזום (מסומן דרך המלצות המערכת)' }) });
+    await loadContacts();
+    await loadRecommendations();
+    showToast('סומן פולואפ עם ' + name);
+  }
+
+  /* ---------- Boot ---------- */
+  async function bootApp() {
+    await loadProfile();
+    await Promise.all([loadPipeline(), loadContacts(), loadEvents(), loadActivity()]);
+    await loadRecommendations();
+  }
+
+  /* ---------- Event wiring (delegation-based, no inline handlers) ---------- */
+  document.getElementById('login-btn').addEventListener('click', doMockLogin);
+  document.getElementById('refresh-btn').addEventListener('click', mockRefresh);
+  document.getElementById('logout-btn').addEventListener('click', doLogout);
+
+  document.getElementById('tabnav').addEventListener('click', e => {
+    const btn = e.target.closest('button[data-tab]'); if (!btn) return;
+    switchTab(btn.dataset.tab);
+  });
+
+  document.getElementById('teamMax').addEventListener('input', function () {
+    document.getElementById('teamMaxVal').textContent = this.value;
+  });
+
+  document.getElementById('apply-profile-btn').addEventListener('click', applyProfile);
+  document.getElementById('call-search').addEventListener('input', filterCalls);
+
+  document.getElementById('company-recs').addEventListener('click', e => {
+    const btn = e.target.closest('button[data-action]'); if (!btn) return;
+    const c = CACHE.companies[Number(btn.dataset.index)];
+    if (c && btn.dataset.action === 'add-company') addCompanyToPipeline(c.id);
+  });
+
+  document.getElementById('people-recs-new').addEventListener('click', e => {
+    const btn = e.target.closest('button[data-action]'); if (!btn) return;
+    const p = CACHE.people[Number(btn.dataset.index)];
+    if (p && btn.dataset.action === 'mark-contacted') markContacted(p.company_id, p.founder, p.company_name);
+  });
+
+  document.getElementById('followup-recs').addEventListener('click', e => {
+    const btn = e.target.closest('button[data-action]'); if (!btn) return;
+    const f = CACHE.followups[Number(btn.dataset.index)];
+    if (f && btn.dataset.action === 'mark-followup') markFollowUpDone(f.name);
+  });
+
+  document.getElementById('event-recs').addEventListener('click', e => {
+    const btn = e.target.closest('button[data-action]'); if (!btn) return;
+    const ev = CACHE.events[Number(btn.dataset.index)];
+    if (ev && btn.dataset.action === 'open-link' && ev.link) window.open(ev.link, '_blank');
+  });
+
+  checkSession();
+</script>
+</body>
+</html>
