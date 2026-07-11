@@ -9,19 +9,21 @@ export type ProviderCategory =
   | "handyman";
 
 export interface UserProfile {
+  id: string;
+  email: string;
   name: string;
-  authMethod: "google" | "apple" | "phone" | null;
   phone?: string;
-  email?: string;
   moveDate: string | null;
   fromCity: string;
   toCity: string;
   apartmentSize: ApartmentSize | null;
   onboardingComplete: boolean;
+  isAdmin: boolean;
 }
 
 export interface TaskItem {
   id: string;
+  templateId?: string;
   title: string;
   description: string;
   stage: TaskStage;
@@ -83,6 +85,21 @@ export interface TaskTemplateContent {
   id: string;
   title: string;
   description: string;
+  stage: TaskStage;
+  offsetDays: number;
+  category: ProviderCategory | "docs" | "utilities" | "general";
+  linkedProviderCategory?: ProviderCategory;
+}
+
+export interface AdminUserRow {
+  id: string;
+  name: string;
+  email: string;
+  fromCity: string;
+  toCity: string;
+  moveDate: string | null;
+  progress: number;
+  createdAt: string;
 }
 
 export interface AppState {

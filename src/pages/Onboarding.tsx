@@ -23,15 +23,21 @@ export default function Onboarding() {
   const [apartmentSize, setApartmentSize] = useState<ApartmentSize | null>(
     null
   );
+  const [submitting, setSubmitting] = useState(false);
 
   const canProceedStep1 = !!moveDate;
   const canProceedStep2 = !!fromCity && !!toCity;
   const canFinish = !!apartmentSize;
 
-  const handleFinish = () => {
+  const handleFinish = async () => {
     if (!moveDate || !fromCity || !toCity || !apartmentSize) return;
-    completeOnboarding({ moveDate, fromCity, toCity, apartmentSize });
-    navigate("/dashboard");
+    setSubmitting(true);
+    try {
+      await completeOnboarding({ moveDate, fromCity, toCity, apartmentSize });
+      navigate("/dashboard");
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
@@ -167,11 +173,11 @@ export default function Onboarding() {
                 חזרה
               </button>
               <button
-                disabled={!canFinish}
+                disabled={!canFinish || submitting}
                 onClick={handleFinish}
                 className="flex-1 py-3.5 rounded-xl font-semibold bg-brand-500 text-white disabled:opacity-30"
               >
-                בואו נתחיל! 🎉
+                {submitting ? "רגע, בונים את הצ'ק-ליסט..." : "בואו נתחיל! 🎉"}
               </button>
             </div>
           </div>

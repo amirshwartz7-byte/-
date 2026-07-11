@@ -1,6 +1,9 @@
+import { useEffect, useState } from "react";
 import { useApp } from "../../store/AppContext";
 import { providerCategoryLabels } from "../../data/providers";
 import { formatDateHe } from "../../utils/dateUtils";
+import { supabase } from "../../lib/supabaseClient";
+import type { Lead, LeadStatus, ProviderCategory } from "../../types";
 
 const statusLabels: Record<string, { label: string; className: string }> = {
   sent: { label: "נשלח", className: "bg-blue-50 text-blue-600" },
@@ -8,10 +11,51 @@ const statusLabels: Record<string, { label: string; className: string }> = {
   closed: { label: "נסגר", className: "bg-green-50 text-green-600" },
 };
 
+interface LeadRow {
+  id: string;
+  provider_id: string;
+  category: ProviderCategory;
+  status: LeadStatus;
+  created_at: string;
+  closed_price: number | null;
+}
+
 export default function AdminLeads() {
   const { state } = useApp();
+  const [leads, setLeads] = useState<Lead[] | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
-  const totalClosedRevenue = state.leads
+  useEffect(() => {
+    if (!supabase) return;
+    let cancelled = false;
+    supabase
+      .from("leads")
+      .select("*")
+      .order("created_at", { ascending: false })
+      .then(({ data, error: err }) => {
+        if (cancelled) return;
+        if (err) {
+          setError(err.message);
+          return;
+        }
+        setLeads(
+          (data as LeadRow[]).map((row) => ({
+            id: row.id,
+            providerId: row.provider_id,
+            category: row.category,
+            status: row.status,
+            createdAt: row.created_at,
+            closedPrice: row.closed_price ?? undefined,
+          }))
+        );
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  const rows = leads ?? [];
+  const totalClosedRevenue = rows
     .filter((l) => l.status === "closed" && l.closedPrice)
     .reduce((sum, l) => sum + (l.closedPrice ?? 0), 0);
   const estimatedCommission = Math.round(totalClosedRevenue * 0.08);
@@ -23,13 +67,13 @@ export default function AdminLeads() {
       <div className="grid grid-cols-3 gap-3 mb-5">
         <div className="bg-white rounded-xl border border-gray-200 p-4 text-center">
           <p className="text-2xl font-extrabold text-gray-900">
-            {state.leads.length}
+            {rows.length}
           </p>
           <p className="text-xs text-gray-500 mt-1">סה&quot;כ פניות</p>
         </div>
         <div className="bg-white rounded-xl border border-gray-200 p-4 text-center">
           <p className="text-2xl font-extrabold text-green-600">
-            {state.leads.filter((l) => l.status === "closed").length}
+            {rows.filter((l) => l.status === "closed").length}
           </p>
           <p className="text-xs text-gray-500 mt-1">עסקאות שנסגרו</p>
         </div>
@@ -41,7 +85,17 @@ export default function AdminLeads() {
         </div>
       </div>
 
-      {state.leads.length === 0 ? (
+      {error && (
+        <div className="bg-red-50 text-red-600 text-sm rounded-xl p-4 mb-4">
+          שגיאה בטעינת לידים: {error}
+        </div>
+      )}
+
+      {!leads && !error ? (
+        <div className="bg-white rounded-xl border border-gray-200 p-8 text-center text-gray-400 text-sm">
+          טוען לידים...
+        </div>
+      ) : rows.length === 0 ? (
         <div className="bg-white rounded-xl border border-gray-200 p-8 text-center text-gray-400 text-sm">
           עדיין אין פניות רשומות במערכת
         </div>
@@ -60,7 +114,7 @@ export default function AdminLeads() {
               </tr>
             </thead>
             <tbody>
-              {state.leads.map((l) => {
+              {rows.map((l) => {
                 const provider = state.providers.find(
                   (p) => p.id === l.providerId
                 );
@@ -85,7 +139,9 @@ export default function AdminLeads() {
                       </span>
                     </td>
                     <td className="px-4 py-3 text-gray-700">
-                      {l.closedPrice ? `₪${l.closedPrice.toLocaleString()}` : "-"}
+                      {l.closedPrice
+                        ? `₪${l.closedPrice.toLocaleString()}`
+                        : "-"}
                     </td>
                   </tr>
                 );

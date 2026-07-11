@@ -6,11 +6,11 @@ import { formatDateHe } from "../utils/dateUtils";
 
 export default function Profile() {
   const navigate = useNavigate();
-  const { state, resetApp } = useApp();
+  const { state, signOut } = useApp();
 
-  const handleReset = () => {
-    if (confirm("לאפס את כל הנתונים ולהתחיל מחדש?")) {
-      resetApp();
+  const handleSignOut = async () => {
+    if (confirm("להתנתק מהחשבון?")) {
+      await signOut();
       navigate("/");
     }
   };
@@ -28,15 +28,20 @@ export default function Profile() {
           <div className="w-16 h-16 rounded-full bg-brand-50 text-brand-600 flex items-center justify-center text-3xl mx-auto mb-3">
             👤
           </div>
-          <p className="font-bold text-gray-900 text-lg">{state.user.name}</p>
-          <p className="text-xs text-gray-400 mt-1">
-            התחברות באמצעות{" "}
-            {state.user.authMethod === "google"
-              ? "Google"
-              : state.user.authMethod === "apple"
-              ? "Apple"
-              : "טלפון"}
+          <p className="font-bold text-gray-900 text-lg">
+            {state.user.name || "ללא שם"}
           </p>
+          <p className="text-xs text-gray-400 mt-1" dir="ltr">
+            {state.user.email}
+          </p>
+          {state.user.isAdmin && (
+            <button
+              onClick={() => navigate("/admin")}
+              className="mt-2 text-[11px] font-semibold bg-brand-50 text-brand-600 px-2.5 py-1 rounded-full"
+            >
+              מעבר לפאנל ניהול
+            </button>
+          )}
         </div>
 
         <div className="bg-white rounded-2xl p-4 shadow-card border border-gray-100 flex flex-col divide-y divide-gray-100">
@@ -83,10 +88,10 @@ export default function Profile() {
         </button>
 
         <button
-          onClick={handleReset}
+          onClick={handleSignOut}
           className="mt-4 text-sm font-semibold text-red-500 py-2"
         >
-          איפוס נתונים והתחלה מחדש
+          התנתקות מהחשבון
         </button>
       </div>
 

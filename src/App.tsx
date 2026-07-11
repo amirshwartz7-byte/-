@@ -1,5 +1,5 @@
 import type { ReactElement } from "react";
-import { Navigate, Route, Routes } from "react-router-dom";
+import { Navigate, Route, Routes, useNavigate } from "react-router-dom";
 import { useApp } from "./store/AppContext";
 import Landing from "./pages/Landing";
 import Onboarding from "./pages/Onboarding";
@@ -17,19 +17,97 @@ import AdminProviders from "./pages/admin/AdminProviders";
 import AdminLeads from "./pages/admin/AdminLeads";
 import AdminContent from "./pages/admin/AdminContent";
 
+function FullScreenSpinner() {
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-gray-50">
+      <div className="text-center">
+        <div className="text-3xl mb-2 animate-pulse">📦</div>
+        <p className="text-sm text-gray-400">טוען...</p>
+      </div>
+    </div>
+  );
+}
+
+function RequireAuth({ children }: { children: ReactElement }) {
+  const { session, dataLoading } = useApp();
+  if (!session) return <Navigate to="/" replace />;
+  if (dataLoading) return <FullScreenSpinner />;
+  return children;
+}
+
 function RequireOnboarding({ children }: { children: ReactElement }) {
-  const { state } = useApp();
+  const { state, session, dataLoading } = useApp();
+  if (!session) return <Navigate to="/" replace />;
+  if (dataLoading) return <FullScreenSpinner />;
   if (!state.user.onboardingComplete) {
-    return <Navigate to="/" replace />;
+    return <Navigate to="/onboarding" replace />;
   }
   return children;
 }
 
+function RequireAdmin({ children }: { children: ReactElement }) {
+  const { state, session, dataLoading } = useApp();
+  const navigate = useNavigate();
+  if (!session) return <Navigate to="/" replace />;
+  if (dataLoading) return <FullScreenSpinner />;
+  if (!state.user.isAdmin) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-50 px-6">
+        <div className="text-center max-w-sm">
+          <div className="text-4xl mb-3">🔒</div>
+          <h1 className="text-lg font-bold text-gray-900 mb-2">
+            אין לכם הרשאת גישה
+          </h1>
+          <p className="text-sm text-gray-500 mb-4">
+            עמוד זה מיועד למנהלי מערכת בלבד.
+          </p>
+          <button
+            onClick={() => navigate("/dashboard")}
+            className="px-5 py-2.5 rounded-xl bg-brand-500 text-white font-semibold text-sm"
+          >
+            חזרה לדשבורד
+          </button>
+        </div>
+      </div>
+    );
+  }
+  return children;
+}
+
+function LandingOrRedirect() {
+  const { state, session, authLoading, dataLoading } = useApp();
+  if (authLoading) return <FullScreenSpinner />;
+  if (session) {
+    if (dataLoading) return <FullScreenSpinner />;
+    return (
+      <Navigate
+        to={state.user.onboardingComplete ? "/dashboard" : "/onboarding"}
+        replace
+      />
+    );
+  }
+  return <Landing />;
+}
+
+function OnboardingGuard() {
+  const { state, session, authLoading, dataLoading } = useApp();
+  if (authLoading) return <FullScreenSpinner />;
+  if (!session) return <Navigate to="/" replace />;
+  if (dataLoading) return <FullScreenSpinner />;
+  if (state.user.onboardingComplete) {
+    return <Navigate to="/dashboard" replace />;
+  }
+  return <Onboarding />;
+}
+
 export default function App() {
+  const { authLoading } = useApp();
+  if (authLoading) return <FullScreenSpinner />;
+
   return (
     <Routes>
-      <Route path="/" element={<Landing />} />
-      <Route path="/onboarding" element={<Onboarding />} />
+      <Route path="/" element={<LandingOrRedirect />} />
+      <Route path="/onboarding" element={<OnboardingGuard />} />
       <Route
         path="/dashboard"
         element={
@@ -89,12 +167,19 @@ export default function App() {
       <Route
         path="/profile"
         element={
-          <RequireOnboarding>
+          <RequireAuth>
             <Profile />
-          </RequireOnboarding>
+          </RequireAuth>
         }
       />
-      <Route path="/admin" element={<AdminLayout />}>
+      <Route
+        path="/admin"
+        element={
+          <RequireAdmin>
+            <AdminLayout />
+          </RequireAdmin>
+        }
+      >
         <Route index element={<Navigate to="users" replace />} />
         <Route path="users" element={<AdminUsers />} />
         <Route path="providers" element={<AdminProviders />} />
