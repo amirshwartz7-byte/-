@@ -16,7 +16,9 @@ export default function AdminUsers() {
       const [profilesRes, tasksRes] = await Promise.all([
         supabase
           .from("profiles")
-          .select("id, name, email, from_city, to_city, move_date, created_at")
+          .select(
+            "id, name, email, departure_city, resort, trip_date, created_at"
+          )
           .order("created_at", { ascending: false }),
         supabase.from("tasks").select("user_id, done"),
       ]);
@@ -43,9 +45,9 @@ export default function AdminUsers() {
           id: string;
           name: string | null;
           email: string | null;
-          from_city: string | null;
-          to_city: string | null;
-          move_date: string | null;
+          departure_city: string | null;
+          resort: string | null;
+          trip_date: string | null;
           created_at: string;
         }[]
       ).map((p) => {
@@ -54,9 +56,9 @@ export default function AdminUsers() {
           id: p.id,
           name: p.name || "ללא שם",
           email: p.email ?? "-",
-          fromCity: p.from_city ?? "-",
-          toCity: p.to_city ?? "-",
-          moveDate: p.move_date,
+          departureCity: p.departure_city ?? "-",
+          resort: p.resort ?? "-",
+          tripDate: p.trip_date,
           progress:
             progress && progress.total > 0
               ? Math.round((progress.done / progress.total) * 100)
@@ -108,9 +110,9 @@ export default function AdminUsers() {
                 <tr>
                   <th className="text-right font-semibold px-4 py-3">שם</th>
                   <th className="text-right font-semibold px-4 py-3">מייל</th>
-                  <th className="text-right font-semibold px-4 py-3">מסלול</th>
+                  <th className="text-right font-semibold px-4 py-3">יעד</th>
                   <th className="text-right font-semibold px-4 py-3">
-                    תאריך מעבר
+                    תאריך טיסה
                   </th>
                   <th className="text-right font-semibold px-4 py-3">
                     התקדמות
@@ -127,10 +129,10 @@ export default function AdminUsers() {
                       {u.email}
                     </td>
                     <td className="px-4 py-3 text-gray-600">
-                      {u.fromCity} ← {u.toCity}
+                      {u.departureCity} ← {u.resort}
                     </td>
                     <td className="px-4 py-3 text-gray-600">
-                      {u.moveDate ? formatDateHe(u.moveDate) : "-"}
+                      {u.tripDate ? formatDateHe(u.tripDate) : "-"}
                     </td>
                     <td className="px-4 py-3">
                       <div className="flex items-center gap-2 w-32">

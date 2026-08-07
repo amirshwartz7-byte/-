@@ -2,26 +2,26 @@ import { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Header from "../components/Header";
 import BottomNav from "../components/BottomNav";
-import { books } from "../data/books";
+import { guides } from "../data/guides";
 
-export default function Books() {
+export default function Guides() {
   const navigate = useNavigate();
   const [activeTopic, setActiveTopic] = useState<string>("הכל");
 
   const topics = useMemo(
-    () => ["הכל", ...Array.from(new Set(books.map((b) => b.topic)))],
+    () => ["הכל", ...Array.from(new Set(guides.map((g) => g.topic)))],
     []
   );
 
-  const filtered = books.filter(
-    (b) => activeTopic === "הכל" || b.topic === activeTopic
+  const filtered = guides.filter(
+    (g) => activeTopic === "הכל" || g.topic === activeTopic
   );
 
   return (
     <div className="app-shell">
       <Header
-        title="ספרים ומדריכים"
-        subtitle="קריאה מומלצת לכל שלב במעבר"
+        title="מדריכים וטיפים"
+        subtitle="המלצות לכל שלב בחופשת הסקי"
         onBack={() => navigate(-1)}
       />
 
@@ -42,22 +42,22 @@ export default function Books() {
       </div>
 
       <div className="flex-1 overflow-y-auto px-4 py-4 flex flex-col gap-3">
-        {filtered.map((b) => (
+        {filtered.map((g) => (
           <div
-            key={b.id}
+            key={g.id}
             className="bg-white rounded-xl p-4 shadow-card border border-gray-100 flex gap-3.5"
           >
             <div className="w-14 h-14 rounded-xl bg-brand-50 flex items-center justify-center text-3xl shrink-0">
-              {b.emoji}
+              {g.emoji}
             </div>
             <div className="flex-1 min-w-0">
-              <p className="font-bold text-gray-900">{b.title}</p>
-              <p className="text-xs text-gray-500">{b.author}</p>
+              <p className="font-bold text-gray-900">{g.title}</p>
+              <p className="text-xs text-gray-500">{g.author}</p>
               <span className="inline-block mt-1.5 text-[11px] font-semibold bg-gray-100 text-gray-500 px-2 py-0.5 rounded-full">
-                {b.topic}
+                {g.topic}
               </span>
               <p className="text-xs text-gray-500 mt-2 leading-relaxed">
-                {b.description}
+                {g.description}
               </p>
             </div>
           </div>

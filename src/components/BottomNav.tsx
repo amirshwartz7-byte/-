@@ -2,8 +2,8 @@ import { NavLink } from "react-router-dom";
 
 const items = [
   { to: "/dashboard", label: "בית", icon: "🏠" },
-  { to: "/checklist", label: "משימות", icon: "✅" },
-  { to: "/marketplace", label: "ספקים", icon: "🛒" },
+  { to: "/checklist", label: "הכנה", icon: "🎒" },
+  { to: "/marketplace", label: "ספקים", icon: "⛷️" },
   { to: "/budget", label: "תקציב", icon: "💰" },
 ];
 

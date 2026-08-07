@@ -44,8 +44,8 @@ export default function PackageBuilder() {
   return (
     <div className="app-shell">
       <Header
-        title="בניית חבילת שירותים"
-        subtitle="בחרו ספק אחד מכל קטגוריה"
+        title="בניית חבילת החופשה"
+        subtitle="בחרו ספק אחד מכל קטגוריה: טיסה, לינה, שיעורים וציוד"
         onBack={() => navigate("/marketplace")}
       />
 

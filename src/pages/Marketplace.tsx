@@ -18,7 +18,7 @@ export default function Marketplace() {
 
   return (
     <div className="app-shell">
-      <Header title="מרקטפלייס ספקים" subtitle="השוואת מחירים ודילים בלעדיים" />
+      <Header title="ספקים מומלצים" subtitle="השוואת מחירים ודילים בלעדיים לחברי המועדון" />
 
       <div className="flex-1 overflow-y-auto px-4 py-4 flex flex-col gap-4">
         <button
@@ -26,7 +26,7 @@ export default function Marketplace() {
           className="w-full rounded-2xl bg-gradient-to-l from-brand-600 to-brand-500 text-white p-4 flex items-center justify-between shadow-floating"
         >
           <div className="text-right">
-            <p className="font-bold">🧩 הרכיבו חבילת שירותים משלכם</p>
+            <p className="font-bold">🧩 הרכיבו חבילת חופשה משלכם</p>
             <p className="text-xs opacity-80 mt-1">
               בחרו ספק אחד מכל קטגוריה וקבלו הצעת מחיר כוללת
             </p>

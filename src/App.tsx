@@ -9,7 +9,7 @@ import Marketplace from "./pages/Marketplace";
 import MarketplaceCategory from "./pages/MarketplaceCategory";
 import PackageBuilder from "./pages/PackageBuilder";
 import Budget from "./pages/Budget";
-import Books from "./pages/Books";
+import Guides from "./pages/Guides";
 import Profile from "./pages/Profile";
 import AdminLayout from "./pages/admin/AdminLayout";
 import AdminUsers from "./pages/admin/AdminUsers";
@@ -21,7 +21,7 @@ function FullScreenSpinner() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50">
       <div className="text-center">
-        <div className="text-3xl mb-2 animate-pulse">📦</div>
+        <div className="text-3xl mb-2 animate-pulse">⛷️</div>
         <p className="text-sm text-gray-400">טוען...</p>
       </div>
     </div>
@@ -157,10 +157,10 @@ export default function App() {
         }
       />
       <Route
-        path="/books"
+        path="/guides"
         element={
           <RequireOnboarding>
-            <Books />
+            <Guides />
           </RequireOnboarding>
         }
       />

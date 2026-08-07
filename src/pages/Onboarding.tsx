@@ -1,39 +1,36 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useApp } from "../store/AppContext";
-import { israeliCities } from "../data/cities";
-import type { ApartmentSize } from "../types";
+import { israeliCities, skiResorts } from "../data/cities";
+import type { SkiLevel } from "../types";
 import { todayISO } from "../utils/dateUtils";
 
-const sizes: { value: ApartmentSize; label: string }[] = [
-  { value: "1", label: "חדר 1" },
-  { value: "2", label: "2 חדרים" },
-  { value: "3", label: "3 חדרים" },
-  { value: "4", label: "4 חדרים" },
-  { value: "5+", label: "5+ חדרים / בית פרטי" },
+const levels: { value: SkiLevel; label: string }[] = [
+  { value: "beginner", label: "מתחיל/ה" },
+  { value: "intermediate", label: "בינוני/ת" },
+  { value: "advanced", label: "מתקדם/ת" },
+  { value: "expert", label: "מקצוען/ית" },
 ];
 
 export default function Onboarding() {
   const navigate = useNavigate();
   const { completeOnboarding } = useApp();
   const [step, setStep] = useState(1);
-  const [moveDate, setMoveDate] = useState("");
-  const [fromCity, setFromCity] = useState("");
-  const [toCity, setToCity] = useState("");
-  const [apartmentSize, setApartmentSize] = useState<ApartmentSize | null>(
-    null
-  );
+  const [tripDate, setTripDate] = useState("");
+  const [departureCity, setDepartureCity] = useState("");
+  const [resort, setResort] = useState("");
+  const [skiLevel, setSkiLevel] = useState<SkiLevel | null>(null);
   const [submitting, setSubmitting] = useState(false);
 
-  const canProceedStep1 = !!moveDate;
-  const canProceedStep2 = !!fromCity && !!toCity;
-  const canFinish = !!apartmentSize;
+  const canProceedStep1 = !!tripDate;
+  const canProceedStep2 = !!departureCity && !!resort;
+  const canFinish = !!skiLevel;
 
   const handleFinish = async () => {
-    if (!moveDate || !fromCity || !toCity || !apartmentSize) return;
+    if (!tripDate || !departureCity || !resort || !skiLevel) return;
     setSubmitting(true);
     try {
-      await completeOnboarding({ moveDate, fromCity, toCity, apartmentSize });
+      await completeOnboarding({ tripDate, departureCity, resort, skiLevel });
       navigate("/dashboard");
     } finally {
       setSubmitting(false);
@@ -62,16 +59,16 @@ export default function Onboarding() {
               שאלה 1 מתוך 3
             </p>
             <h2 className="text-2xl font-bold text-gray-900 mb-2">
-              מהו תאריך מעבר הדירה המתוכנן?
+              מהו תאריך הטיסה לחופשת הסקי?
             </h2>
             <p className="text-gray-500 mb-6">
-              נבנה עבורכם צ&apos;ק-ליסט מותאם אישית לפי התאריך הזה
+              נבנה עבורכם צ&apos;ק-ליסט הכנה מותאם אישית לפי התאריך הזה
             </p>
             <input
               type="date"
-              value={moveDate}
+              value={tripDate}
               min={todayISO()}
-              onChange={(e) => setMoveDate(e.target.value)}
+              onChange={(e) => setTripDate(e.target.value)}
               className="w-full text-lg p-4 rounded-xl border border-gray-200 focus:border-brand-500 focus:outline-none"
             />
             <div className="flex-1" />
@@ -91,32 +88,39 @@ export default function Onboarding() {
               שאלה 2 מתוך 3
             </p>
             <h2 className="text-2xl font-bold text-gray-900 mb-2">
-              מאיזו עיר לאיזו עיר עוברים?
+              מאיפה יוצאים ולאן טסים?
             </h2>
-            <p className="text-gray-500 mb-6">זה יעזור לנו למצוא לכם ספקים באזור</p>
+            <p className="text-gray-500 mb-6">
+              זה יעזור לנו להתאים לכם טיסות, ספקים ודילים באזור
+            </p>
             <label className="text-sm font-semibold text-gray-700 mb-1">
-              עוברים מ...
+              יוצאים מ...
             </label>
             <input
-              list="cities"
-              value={fromCity}
-              onChange={(e) => setFromCity(e.target.value)}
-              placeholder="עיר מוצא"
+              list="departure-cities"
+              value={departureCity}
+              onChange={(e) => setDepartureCity(e.target.value)}
+              placeholder="עיר יציאה"
               className="w-full text-lg p-4 rounded-xl border border-gray-200 focus:border-brand-500 focus:outline-none mb-4"
             />
             <label className="text-sm font-semibold text-gray-700 mb-1">
-              עוברים ל...
+              טסים ל...
             </label>
             <input
-              list="cities"
-              value={toCity}
-              onChange={(e) => setToCity(e.target.value)}
-              placeholder="עיר יעד"
+              list="ski-resorts"
+              value={resort}
+              onChange={(e) => setResort(e.target.value)}
+              placeholder="אתר הסקי"
               className="w-full text-lg p-4 rounded-xl border border-gray-200 focus:border-brand-500 focus:outline-none"
             />
-            <datalist id="cities">
+            <datalist id="departure-cities">
               {israeliCities.map((c) => (
                 <option key={c} value={c} />
+              ))}
+            </datalist>
+            <datalist id="ski-resorts">
+              {skiResorts.map((r) => (
+                <option key={r} value={r} />
               ))}
             </datalist>
             <div className="flex-1" />
@@ -144,23 +148,23 @@ export default function Onboarding() {
               שאלה 3 מתוך 3
             </p>
             <h2 className="text-2xl font-bold text-gray-900 mb-2">
-              מהו גודל הדירה הנוכחית?
+              מהי רמת הגלישה שלכם?
             </h2>
             <p className="text-gray-500 mb-6">
-              זה עוזר לנו להעריך את היקף ההובלה
+              זה עוזר לנו להתאים לכם שיעורים, מדריכים והמלצות מסלולים
             </p>
             <div className="grid grid-cols-2 gap-3">
-              {sizes.map((s) => (
+              {levels.map((l) => (
                 <button
-                  key={s.value}
-                  onClick={() => setApartmentSize(s.value)}
+                  key={l.value}
+                  onClick={() => setSkiLevel(l.value)}
                   className={`p-4 rounded-xl border-2 font-semibold text-center ${
-                    apartmentSize === s.value
+                    skiLevel === l.value
                       ? "border-brand-500 bg-brand-50 text-brand-700"
                       : "border-gray-200 text-gray-600"
-                  } ${s.value === "5+" ? "col-span-2" : ""}`}
+                  }`}
                 >
-                  {s.label}
+                  {l.label}
                 </button>
               ))}
             </div>
@@ -177,7 +181,7 @@ export default function Onboarding() {
                 onClick={handleFinish}
                 className="flex-1 py-3.5 rounded-xl font-semibold bg-brand-500 text-white disabled:opacity-30"
               >
-                {submitting ? "רגע, בונים את הצ'ק-ליסט..." : "בואו נתחיל! 🎉"}
+                {submitting ? "רגע, בונים את הצ'ק-ליסט..." : "בואו נתחיל! ⛷️"}
               </button>
             </div>
           </div>

@@ -1,12 +1,12 @@
 import type { TaskItem, TaskTemplateContent } from "../types";
 import { addDays } from "./dateUtils";
 
-export function generateTasksFromMoveDate(
-  moveDate: string,
+export function generateTasksFromTripDate(
+  tripDate: string,
   templates: TaskTemplateContent[]
 ): Omit<TaskItem, "id">[] {
   return templates.map((tpl) => {
-    const due = addDays(moveDate, tpl.offsetDays);
+    const due = addDays(tripDate, tpl.offsetDays);
     return {
       templateId: tpl.id,
       title: tpl.title,

@@ -5,8 +5,8 @@ export interface TaskTemplate {
   title: string;
   description: string;
   stage: TaskStage;
-  offsetDays: number; // negative = days before move date, positive = days after
-  category: ProviderCategory | "docs" | "utilities" | "general";
+  offsetDays: number; // negative = days before trip date, positive = days after
+  category: ProviderCategory | "docs" | "general";
   linkedProviderCategory?: ProviderCategory;
 }
 
@@ -14,220 +14,202 @@ export const taskTemplates: TaskTemplate[] = [
   // שלב 1: חודשיים לפני
   {
     id: "t01",
-    title: "קביעת תקציב מעבר",
+    title: "קביעת תקציב לחופשת הסקי",
     description:
-      "הגדירו תקציב גג למעבר הדירה כדי לעקוב אחרי ההוצאות בהמשך התהליך. אפשר להשתמש במחשבון התקציב באפליקציה.",
+      "הגדירו תקציב גג לחופשת הסקי כדי לעקוב אחרי ההוצאות בהמשך התהליך. אפשר להשתמש במחשבון התקציב באפליקציה.",
     stage: "2mo",
     offsetDays: -60,
     category: "general",
   },
   {
     id: "t02",
-    title: "השוואת הצעות מחברות הובלה",
+    title: "השוואת הצעות טיסות והעברות",
     description:
-      "מומלץ לקבל לפחות 3 הצעות מחיר מחברות הובלה שונות. שימו לב לגודל המשאית, מספר עובדים וביטוח על התכולה.",
+      "מומלץ לקבל לפחות 3 הצעות מחיר לטיסות ולהעברה מהשדה לאתר. שימו לב לתוספת ציוד סקי במחיר הכרטיס.",
     stage: "2mo",
     offsetDays: -55,
-    category: "moving",
-    linkedProviderCategory: "moving",
+    category: "flights",
+    linkedProviderCategory: "flights",
   },
   {
     id: "t03",
-    title: "מיון וגריעת פריטים (דהגה)",
+    title: "בדיקת דרכון ותוקף ויזה",
     description:
-      "עברו על כל חדר ומיינו פריטים ל'לוקח', 'תורם' ו'זורק'. מעבר דירה הוא ההזדמנות הכי טובה לצמצם עודפים.",
-    stage: "2mo",
-    offsetDays: -50,
-    category: "general",
-  },
-  {
-    id: "t04",
-    title: "בדיקת חוזה שכירות / מכר",
-    description:
-      "ודאו שקראתם את כל סעיפי החוזה החדש, כולל תאריך מסירת מפתח, פיקדון ותנאי ביטול.",
+      "ודאו שהדרכון בתוקף לפחות 6 חודשים מיום החזרה, ובדקו אם נדרשת ויזה ליעד שבחרתם.",
     stage: "2mo",
     offsetDays: -55,
     category: "docs",
   },
   {
-    id: "t05",
-    title: "עדכון בית ספר / גן לילדים",
+    id: "t04",
+    title: "הזמנת לינה באתר מוקדם",
     description:
-      "אם עוברים עיר, יש להתחיל תהליך רישום/העברה של הילדים למוסדות חינוך חדשים מוקדם ככל האפשר.",
+      "אתרי הסקי הפופולריים מתמלאים מהר - הזמינו מלון או צ'לט מראש כדי לקבל את המחיר והמיקום הטובים ביותר.",
+    stage: "2mo",
+    offsetDays: -50,
+    category: "lodging",
+    linkedProviderCategory: "lodging",
+  },
+  {
+    id: "t05",
+    title: "בדיקת ביטוח נסיעות לספורט חורף",
+    description:
+      "ודאו שהביטוח מכסה במפורש ספורט חורף (סקי/סנובורד מחוץ למסלולים מסומנים לרוב אינו מכוסה).",
     stage: "2mo",
     offsetDays: -45,
     category: "docs",
   },
   {
     id: "t06",
-    title: "איסוף הצעות ממדביר",
+    title: "הרשמה מוקדמת לשיעורי סקי/סנובורד",
     description:
-      "מומלץ לבצע הדברה בדירה החדשה לפני ההובלה, כשהיא עדיין ריקה מרהיטים.",
+      "אם אתם מתחילים או רוצים לשפר רמה, מומלץ לתאם מדריך פרטי או בית ספר מראש - הביקוש גבוה בעונה.",
     stage: "2mo",
     offsetDays: -40,
-    category: "cleaning",
-    linkedProviderCategory: "cleaning",
+    category: "lessons",
+    linkedProviderCategory: "lessons",
   },
 
   // שלב 2: חודש לפני
   {
     id: "t07",
-    title: "סגירת חברת הובלה",
+    title: "סגירת חבילת הטיול הסופית",
     description:
-      "לאחר השוואת המחירים, סגרו את חברת ההובלה וקבעו תאריך ושעה מדויקים. בקשו אישור בכתב.",
+      "לאחר השוואת המחירים, סגרו טיסות, לינה והעברות וקבלו אישור בכתב על כל ההזמנות.",
     stage: "1mo",
     offsetDays: -30,
-    category: "moving",
-    linkedProviderCategory: "moving",
+    category: "flights",
+    linkedProviderCategory: "flights",
   },
   {
     id: "t08",
-    title: "הזמנת חומרי אריזה",
+    title: "הזמנת/השכרת ציוד סקי מראש",
     description:
-      "קרטונים, נייר בועות, סקוץ' ופלסטיק עטיפה. עדיף להזמין כמות גדולה מהמשוער.",
+      "מגלשיים, מגפיים וקסדה - הזמינו מראש כדי להבטיח מידה נכונה ולחסוך בתור באתר.",
     stage: "1mo",
-    offsetDays: -28,
-    category: "moving",
-    linkedProviderCategory: "moving",
+    offsetDays: -25,
+    category: "equipment",
+    linkedProviderCategory: "equipment",
   },
   {
     id: "t09",
-    title: "הזמנת ניקיון לדירה הישנה",
+    title: "רכישת סקי פאס מראש",
     description:
-      "תאמו חברת ניקיון לניקיון יסודי של הדירה הישנה לאחר הפינוי, בהתאם לדרישות בעל הבית.",
+      "כרטיסי מסלולים (Ski Pass) לרוב זולים יותר ברכישה מקוונת מראש לעומת רכישה באתר עצמו.",
     stage: "1mo",
-    offsetDays: -25,
-    category: "cleaning",
-    linkedProviderCategory: "cleaning",
+    offsetDays: -20,
+    category: "general",
   },
   {
     id: "t10",
-    title: "תיאום ניתוק/חיבור אינטרנט וכבלים",
-    description:
-      "הזמינו ניתוק בכתובת הישנה וחיבור מראש בכתובת החדשה, כדי לא להישאר בלי אינטרנט.",
+    title: "עדכון ביטוח בריאות לחו״ל",
+    description: "ודאו שהביטוח הרפואי בתוקף ומכסה טיפולים בחו\"ל וגם פינוי רפואי במקרה פציעה.",
     stage: "1mo",
-    offsetDays: -21,
-    category: "internet",
-    linkedProviderCategory: "internet",
+    offsetDays: -18,
+    category: "docs",
   },
   {
     id: "t11",
-    title: "עדכון כתובת בבנק ובחברות האשראי",
+    title: "תרגול כושר גופני להכנה לסקי",
     description:
-      "עדכנו את הכתובת החדשה בבנק, בחברות האשראי ובחברת הביטוח.",
+      "חיזוק רגליים וליבה מפחית משמעותית סיכון לפציעות. 3-4 שבועות של אימונים קלים עושים הבדל גדול.",
     stage: "1mo",
-    offsetDays: -20,
-    category: "docs",
+    offsetDays: -15,
+    category: "general",
   },
   {
     id: "t12",
-    title: "בדיקת מנעולן לדירה החדשה",
+    title: "בדיקת ביגוד תרמי וחורפי",
     description:
-      "משיקולי ביטחון מומלץ להחליף צילינדר/מנעול בדירה החדשה מיד עם קבלת המפתח.",
+      "מעיל ומכנסי סקי אטומים למים, שכבות תרמיות, כפפות ומשקפי סקי - עדיף לבדוק ולהשלים חוסרים מראש.",
     stage: "1mo",
-    offsetDays: -18,
-    category: "handyman",
-    linkedProviderCategory: "handyman",
-  },
-  {
-    id: "t13",
-    title: "עדכון ביטוח דירה ותכולה",
-    description: "ודאו שהביטוח מכסה את הדירה החדשה ואת התכולה גם בזמן ההובלה עצמה.",
-    stage: "1mo",
-    offsetDays: -15,
-    category: "docs",
+    offsetDays: -12,
+    category: "equipment",
   },
 
-  // שלב 3: שבוע המעבר
+  // שלב 3: שבוע לפני הנסיעה
   {
-    id: "t14",
-    title: "אריזת קופסת חירום",
+    id: "t13",
+    title: "אריזת תיק ציוד הסקי",
     description:
-      "הכינו קופסה עם פריטים חיוניים ליום הראשון: תרופות, מטענים, מסמכים, כלי מטבח בסיסיים ומצרכי היגיינה.",
+      "ארזו את הביגוד התרמי, המשקפיים, הכפפות וקרם ההגנה. אם שכרתם ציוד באתר - סמנו זאת ברשימה.",
     stage: "week",
     offsetDays: -6,
     category: "general",
   },
   {
-    id: "t15",
-    title: "אריזת שאר הדירה",
+    id: "t14",
+    title: "הדפסת/הורדת מסמכי טיסה וביטוח",
     description:
-      "סמנו כל קופסה עם החדר היעד והתוכן הכללי, כדי להקל על הפריקה בדירה החדשה.",
+      "שמרו עותק דיגיטלי ומודפס של כרטיסי הטיסה, פוליסת הביטוח ואישורי המלון בטלפון ובתיק.",
     stage: "week",
     offsetDays: -5,
+    category: "docs",
+  },
+  {
+    id: "t15",
+    title: "בדיקת תחזית שלג ומזג אוויר באתר",
+    description:
+      "עקבו אחר תחזית השלג והטמפרטורות באתר בימים שלפני הנסיעה, כדי להתאים את הביגוד והציפיות.",
+    stage: "week",
+    offsetDays: -3,
     category: "general",
   },
   {
     id: "t16",
-    title: "העברת קריאות מונים (חשמל, מים, גז)",
+    title: "טעינת אפליקציית מסלולים ומפת האתר",
     description:
-      "צלמו את מצב המונים בדירה הישנה והחדשה ביום המעבר ודווחו לחברות הרלוונטיות.",
+      "רוב אתרי הסקי מציעים אפליקציה עם מפת מסלולים, מצב רכבלים בזמן אמת ותחזית - הורידו לפני הטיסה.",
     stage: "week",
     offsetDays: -2,
-    category: "utilities",
+    category: "general",
   },
   {
     id: "t17",
-    title: "עדכון כתובת בדואר ישראל",
-    description: "הגדירו העברת דואר זמנית מהכתובת הישנה לחדשה.",
+    title: "יום הנסיעה - צ'ק אין וטיסה",
+    description:
+      "הגיעו לשדה מוקדם, ודאו שציוד הסקי נרשם כראוי ובדקו שהעברה מהשדה לאתר מתואמת.",
     stage: "week",
-    offsetDays: -3,
-    category: "docs",
+    offsetDays: 0,
+    category: "flights",
   },
+
+  // שלב 4: אחרי החזרה
   {
     id: "t18",
-    title: "הכנת מזומן לטיפ למובילים",
+    title: "החזרת ציוד מושכר ובדיקת פיקדון",
     description:
-      "מקובל לתת טיפ לצוות המוביל בסוף העבודה. הכינו מראש סכום מתאים במזומן.",
-    stage: "week",
-    offsetDays: -1,
-    category: "moving",
+      "ודאו שהחזרתם את הציוד השכור בזמן ובמצב תקין, ושחררו/בדקו את הפיקדון שהופקד.",
+    stage: "afterWeek",
+    offsetDays: 2,
+    category: "equipment",
+    linkedProviderCategory: "equipment",
   },
   {
     id: "t19",
-    title: "יום המעבר - קבלת מפתח ופיקוח על ההובלה",
+    title: "ניקוי וייבוש ציוד אישי",
     description:
-      "היו נוכחים בזמן הפריקה והטעינה, וודאו שכל התכולה נספרה והגיעה בשלמותה.",
-    stage: "week",
-    offsetDays: 0,
-    category: "moving",
-  },
-
-  // שלב 4: שבוע אחרי המעבר
-  {
-    id: "t20",
-    title: "עדכון כתובת ברשויות (רשות מקומית, ביטוח לאומי, משרד הפנים)",
-    description:
-      "יש חובה חוקית לעדכן כתובת במשרד הפנים תוך 30 יום ממועד המעבר.",
+      "אם קניתם ציוד אישי - נגבו ויבשו היטב לפני האחסון כדי למנוע עובש ולשמור על אורך חיי הציוד.",
     stage: "afterWeek",
     offsetDays: 3,
+    category: "general",
+  },
+  {
+    id: "t20",
+    title: "הגשת תביעת ביטוח (אם נדרש)",
+    description:
+      "אם היה נזק, פציעה או עיכוב טיסה - הגישו תביעה לחברת הביטוח בהקדם, לרוב יש חלון זמן מוגבל.",
+    stage: "afterWeek",
+    offsetDays: 4,
     category: "docs",
   },
   {
     id: "t21",
-    title: "פריקה וארגון סופי של הבית",
-    description: "התחילו מהחדרים החיוניים - מטבח וחדרי שינה, והמשיכו בהדרגה.",
-    stage: "afterWeek",
-    offsetDays: 4,
-    category: "general",
-  },
-  {
-    id: "t22",
-    title: "הכרת השכונה החדשה",
+    title: "שיתוף חוויות וכתיבת ביקורת",
     description:
-      "מצאו סופרמרקט, בית מרקחת, רופא משפחה וגני משחקים קרובים לבית החדש.",
+      "דרגו וכתבו חוות דעת על הספקים שעבדתם איתם - זה עוזר לקהילת פאודר קלאב לבחור נכון בפעם הבאה.",
     stage: "afterWeek",
     offsetDays: 6,
     category: "general",
-  },
-  {
-    id: "t23",
-    title: "תיקונים קטנים בבית החדש",
-    description:
-      "וילונות, מדפים, הרכבת רהיטים - זה הזמן להזמין הנדימן לכל התיקונים שנצברו.",
-    stage: "afterWeek",
-    offsetDays: 7,
-    category: "handyman",
-    linkedProviderCategory: "handyman",
   },
 ];

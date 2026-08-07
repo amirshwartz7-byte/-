@@ -18,7 +18,7 @@ import type {
   TaskTemplateContent,
   UserProfile,
 } from "../types";
-import { generateTasksFromMoveDate } from "../utils/taskGenerator";
+import { generateTasksFromTripDate } from "../utils/taskGenerator";
 import { providerCategoryLabels } from "../data/providers";
 import { supabase } from "../lib/supabaseClient";
 
@@ -34,10 +34,10 @@ const emptyUser: UserProfile = {
   id: "",
   email: "",
   name: "",
-  moveDate: null,
-  fromCity: "",
-  toCity: "",
-  apartmentSize: null,
+  tripDate: null,
+  departureCity: "",
+  resort: "",
+  skiLevel: null,
   onboardingComplete: false,
   isAdmin: false,
 };
@@ -59,10 +59,10 @@ interface ProfileRow {
   email: string | null;
   name: string | null;
   phone: string | null;
-  from_city: string | null;
-  to_city: string | null;
-  move_date: string | null;
-  apartment_size: string | null;
+  departure_city: string | null;
+  resort: string | null;
+  trip_date: string | null;
+  ski_level: string | null;
   onboarding_complete: boolean;
   is_admin: boolean;
 }
@@ -73,10 +73,10 @@ function mapProfile(row: ProfileRow): UserProfile {
     email: row.email ?? "",
     name: row.name ?? "",
     phone: row.phone ?? undefined,
-    fromCity: row.from_city ?? "",
-    toCity: row.to_city ?? "",
-    moveDate: row.move_date,
-    apartmentSize: (row.apartment_size as UserProfile["apartmentSize"]) ?? null,
+    departureCity: row.departure_city ?? "",
+    resort: row.resort ?? "",
+    tripDate: row.trip_date,
+    skiLevel: (row.ski_level as UserProfile["skiLevel"]) ?? null,
     onboardingComplete: row.onboarding_complete,
     isAdmin: row.is_admin,
   };
@@ -198,10 +198,10 @@ interface AppContextValue {
   signIn: (email: string, password: string) => Promise<AuthResult>;
   signOut: () => Promise<void>;
   completeOnboarding: (data: {
-    moveDate: string;
-    fromCity: string;
-    toCity: string;
-    apartmentSize: UserProfile["apartmentSize"];
+    tripDate: string;
+    departureCity: string;
+    resort: string;
+    skiLevel: UserProfile["skiLevel"];
   }) => Promise<void>;
   toggleTask: (id: string) => Promise<void>;
   addCustomTask: (task: Omit<TaskItem, "id" | "custom" | "done">) => Promise<void>;
@@ -421,16 +421,16 @@ export function AppProvider({ children }: { children: ReactNode }) {
     await supabase
       .from("profiles")
       .update({
-        move_date: data.moveDate,
-        from_city: data.fromCity,
-        to_city: data.toCity,
-        apartment_size: data.apartmentSize,
+        trip_date: data.tripDate,
+        departure_city: data.departureCity,
+        resort: data.resort,
+        ski_level: data.skiLevel,
         onboarding_complete: true,
       })
       .eq("id", userId);
 
-    const newTasks = generateTasksFromMoveDate(
-      data.moveDate,
+    const newTasks = generateTasksFromTripDate(
+      data.tripDate,
       state.taskTemplateContent
     );
     const { data: inserted } = await supabase

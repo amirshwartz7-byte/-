@@ -7,7 +7,7 @@ export default function SetupRequired() {
           נדרשת הגדרת חיבור למסד הנתונים
         </h1>
         <p className="text-sm text-gray-600 leading-relaxed mb-4">
-          האפליקציה מחוברת ל-Supabase לצורך אחסון משתמשים, משימות, ספקים
+          פאודר קלאב מחוברת ל-Supabase לצורך אחסון משתמשים, משימות, ספקים
           ותקציב. יש להגדיר את משתני הסביבה{" "}
           <code className="bg-gray-100 px-1.5 py-0.5 rounded text-xs">
             VITE_SUPABASE_URL

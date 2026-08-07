@@ -4,6 +4,13 @@ import Header from "../components/Header";
 import BottomNav from "../components/BottomNav";
 import { formatDateHe } from "../utils/dateUtils";
 
+const skiLevelLabels: Record<string, string> = {
+  beginner: "מתחיל/ה",
+  intermediate: "בינוני/ת",
+  advanced: "מתקדם/ת",
+  expert: "מקצוען/ית",
+};
+
 export default function Profile() {
   const navigate = useNavigate();
   const { state, signOut } = useApp();
@@ -46,32 +53,32 @@ export default function Profile() {
 
         <div className="bg-white rounded-2xl p-4 shadow-card border border-gray-100 flex flex-col divide-y divide-gray-100">
           <div className="py-3 flex justify-between text-sm">
-            <span className="text-gray-500">תאריך מעבר</span>
+            <span className="text-gray-500">תאריך טיסה</span>
             <span className="font-semibold text-gray-800">
-              {state.user.moveDate ? formatDateHe(state.user.moveDate) : "-"}
+              {state.user.tripDate ? formatDateHe(state.user.tripDate) : "-"}
             </span>
           </div>
           <div className="py-3 flex justify-between text-sm">
-            <span className="text-gray-500">מסלול</span>
+            <span className="text-gray-500">יעד</span>
             <span className="font-semibold text-gray-800">
-              {state.user.fromCity} ← {state.user.toCity}
+              {state.user.departureCity} ← {state.user.resort}
             </span>
           </div>
           <div className="py-3 flex justify-between text-sm">
-            <span className="text-gray-500">גודל דירה</span>
+            <span className="text-gray-500">רמת גלישה</span>
             <span className="font-semibold text-gray-800">
-              {state.user.apartmentSize}
+              {skiLevelLabels[state.user.skiLevel ?? ""] ?? "-"}
             </span>
           </div>
         </div>
 
         <button
-          onClick={() => navigate("/books")}
+          onClick={() => navigate("/guides")}
           className="bg-white rounded-2xl p-4 shadow-card border border-gray-100 flex items-center gap-3 text-right"
         >
-          <span className="text-2xl">📚</span>
+          <span className="text-2xl">📖</span>
           <span className="font-semibold text-gray-800 flex-1">
-            ספרים ומדריכים מומלצים
+            מדריכים וטיפים מומלצים
           </span>
           <span className="text-gray-300">←</span>
         </button>
@@ -82,7 +89,7 @@ export default function Profile() {
         >
           <span className="text-2xl">🧩</span>
           <span className="font-semibold text-gray-800 flex-1">
-            חבילת השירותים שלי
+            חבילת החופשה שלי
           </span>
           <span className="text-gray-300">←</span>
         </button>

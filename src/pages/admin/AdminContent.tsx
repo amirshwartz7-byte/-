@@ -4,8 +4,8 @@ import { useApp } from "../../store/AppContext";
 const stageLabels: Record<string, string> = {
   "2mo": "חודשיים לפני",
   "1mo": "חודש לפני",
-  week: "שבוע המעבר",
-  afterWeek: "שבוע אחרי",
+  week: "שבוע הנסיעה",
+  afterWeek: "אחרי החזרה",
 };
 
 export default function AdminContent() {

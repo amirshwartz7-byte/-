@@ -9,8 +9,8 @@ import type { TaskItem, TaskStage } from "../types";
 const stages: { key: TaskStage; label: string }[] = [
   { key: "2mo", label: "חודשיים לפני" },
   { key: "1mo", label: "חודש לפני" },
-  { key: "week", label: "שבוע המעבר" },
-  { key: "afterWeek", label: "שבוע אחרי" },
+  { key: "week", label: "שבוע הנסיעה" },
+  { key: "afterWeek", label: "אחרי החזרה" },
 ];
 
 export default function Checklist() {
@@ -38,7 +38,7 @@ export default function Checklist() {
       stage: activeStage,
       offsetDays: 0,
       category: "general",
-      dueDate: state.user.moveDate ?? undefined,
+      dueDate: state.user.tripDate ?? undefined,
     });
     setNewTitle("");
     setNewDesc("");
@@ -47,7 +47,7 @@ export default function Checklist() {
 
   return (
     <div className="app-shell">
-      <Header title="צ'ק-ליסט המעבר" subtitle="כל המשימות שלכם במקום אחד" />
+      <Header title="צ'ק-ליסט ההכנה" subtitle="כל המשימות לחופשת הסקי במקום אחד" />
 
       <div className="px-3 pt-3 flex gap-1.5 overflow-x-auto no-scrollbar">
         {stages.map((s) => (

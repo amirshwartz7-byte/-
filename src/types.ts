@@ -1,22 +1,18 @@
-export type ApartmentSize = "1" | "2" | "3" | "4" | "5+";
+export type SkiLevel = "beginner" | "intermediate" | "advanced" | "expert";
 
 export type TaskStage = "2mo" | "1mo" | "week" | "afterWeek";
 
-export type ProviderCategory =
-  | "moving"
-  | "cleaning"
-  | "internet"
-  | "handyman";
+export type ProviderCategory = "flights" | "lodging" | "lessons" | "equipment";
 
 export interface UserProfile {
   id: string;
   email: string;
   name: string;
   phone?: string;
-  moveDate: string | null;
-  fromCity: string;
-  toCity: string;
-  apartmentSize: ApartmentSize | null;
+  tripDate: string | null;
+  departureCity: string;
+  resort: string;
+  skiLevel: SkiLevel | null;
   onboardingComplete: boolean;
   isAdmin: boolean;
 }
@@ -28,7 +24,7 @@ export interface TaskItem {
   description: string;
   stage: TaskStage;
   offsetDays: number;
-  category: ProviderCategory | "docs" | "utilities" | "general";
+  category: ProviderCategory | "docs" | "general";
   linkedProviderCategory?: ProviderCategory;
   done: boolean;
   custom: boolean;
@@ -71,7 +67,7 @@ export interface Budget {
   categories: BudgetCategory[];
 }
 
-export interface Book {
+export interface Guide {
   id: string;
   title: string;
   author: string;
@@ -87,7 +83,7 @@ export interface TaskTemplateContent {
   description: string;
   stage: TaskStage;
   offsetDays: number;
-  category: ProviderCategory | "docs" | "utilities" | "general";
+  category: ProviderCategory | "docs" | "general";
   linkedProviderCategory?: ProviderCategory;
 }
 
@@ -95,9 +91,9 @@ export interface AdminUserRow {
   id: string;
   name: string;
   email: string;
-  fromCity: string;
-  toCity: string;
-  moveDate: string | null;
+  departureCity: string;
+  resort: string;
+  tripDate: string | null;
   progress: number;
   createdAt: string;
 }

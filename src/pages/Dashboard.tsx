@@ -15,7 +15,7 @@ export default function Dashboard() {
   const navigate = useNavigate();
   const [openTask, setOpenTask] = useState<TaskItem | null>(null);
 
-  const days = state.user.moveDate ? daysUntil(state.user.moveDate) : 0;
+  const days = state.user.tripDate ? daysUntil(state.user.tripDate) : 0;
 
   const { doneCount, totalCount, percent } = useMemo(() => {
     const total = state.tasks.length;
@@ -37,8 +37,8 @@ export default function Dashboard() {
   return (
     <div className="app-shell">
       <Header
-        title={`שלום, ${state.user.name || "משתמש/ת"} 👋`}
-        subtitle={`${state.user.fromCity} ← ${state.user.toCity}`}
+        title={`שלום, ${state.user.name || "גולש/ת"} ⛷️`}
+        subtitle={`${state.user.departureCity} ← ${state.user.resort}`}
       />
 
       <div className="flex-1 overflow-y-auto px-5 py-5 flex flex-col gap-5">
@@ -46,9 +46,9 @@ export default function Dashboard() {
 
         <div className="bg-white rounded-2xl p-4 shadow-card border border-gray-100">
           <div className="flex items-center justify-between mb-2">
-            <p className="font-semibold text-gray-800">התקדמות המשימות</p>
+            <p className="font-semibold text-gray-800">התקדמות ההכנות</p>
             <span className="text-sm font-bold text-brand-600">
-              {percent}% Done
+              {percent}%
             </span>
           </div>
           <ProgressBar percent={percent} />
@@ -60,7 +60,7 @@ export default function Dashboard() {
         <div>
           <div className="flex items-center justify-between mb-3">
             <h2 className="font-bold text-gray-900">
-              התחנה הבאה בשבוע הקרוב
+              המשימות הבאות בהכנה לטיסה
             </h2>
             <button
               onClick={() => navigate("/checklist")}
@@ -71,7 +71,7 @@ export default function Dashboard() {
           </div>
           {upcomingTasks.length === 0 ? (
             <div className="bg-white rounded-xl border border-gray-100 p-6 text-center text-gray-400 text-sm">
-              כל הכבוד! השלמתם את כל המשימות 🎉
+              כל הכבוד! השלמתם את כל המשימות, מוכנים לשלג 🎉
             </div>
           ) : (
             <div className="flex flex-col gap-2.5">
@@ -94,16 +94,16 @@ export default function Dashboard() {
           >
             <div className="text-2xl mb-1">🧩</div>
             <p className="font-semibold text-gray-900 text-sm">
-              הרכיבו חבילת שירותים
+              הרכיבו חבילת חופשה
             </p>
           </button>
           <button
-            onClick={() => navigate("/books")}
+            onClick={() => navigate("/guides")}
             className="bg-white rounded-2xl p-4 shadow-card border border-gray-100 text-right"
           >
-            <div className="text-2xl mb-1">📚</div>
+            <div className="text-2xl mb-1">📖</div>
             <p className="font-semibold text-gray-900 text-sm">
-              ספרים ומדריכים מומלצים
+              מדריכים וטיפים מומלצים
             </p>
           </button>
         </div>

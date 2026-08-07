@@ -36,7 +36,7 @@ export default function Budget() {
 
   return (
     <div className="app-shell">
-      <Header title="מחשבון תקציב" subtitle="עקבו אחרי ההוצאות שלכם למעבר" />
+      <Header title="מחשבון תקציב" subtitle="עקבו אחרי ההוצאות שלכם לחופשת הסקי" />
 
       <div className="flex-1 overflow-y-auto px-4 py-4 flex flex-col gap-5 pb-8">
         <div className="bg-white rounded-2xl p-5 shadow-card border border-gray-100">
@@ -138,8 +138,8 @@ export default function Budget() {
         </div>
 
         <p className="text-[11px] text-gray-400 text-center leading-relaxed px-4">
-          עלויות בפועל מתעדכנות אוטומטית כאשר אתם סוגרים עסקה עם ספק
-          במרקטפלייס. ניתן גם לעדכן את הסכום המתוכנן ידנית בכל סעיף.
+          עלויות בפועל מתעדכנות אוטומטית כאשר אתם סוגרים דיל עם ספק
+          במועדון. ניתן גם לעדכן את הסכום המתוכנן ידנית בכל סעיף.
         </p>
       </div>
 

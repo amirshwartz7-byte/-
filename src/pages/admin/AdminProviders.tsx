@@ -5,7 +5,7 @@ import type { Provider, ProviderCategory } from "../../types";
 
 const emptyForm = {
   name: "",
-  category: "moving" as ProviderCategory,
+  category: "flights" as ProviderCategory,
   rating: 4.5,
   priceTag: "$$" as Provider["priceTag"],
   avgPrice: 500,

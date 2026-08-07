@@ -8,6 +8,13 @@ import { providerCategoryLabels } from "../data/providers";
 import type { Lead, Provider, ProviderCategory } from "../types";
 import { formatDateHe } from "../utils/dateUtils";
 
+const skiLevelLabels: Record<string, string> = {
+  beginner: "מתחיל/ה",
+  intermediate: "בינוני/ת",
+  advanced: "מתקדם/ת",
+  expert: "מקצוען/ית",
+};
+
 export default function MarketplaceCategory() {
   const { category } = useParams<{ category: ProviderCategory }>();
   const navigate = useNavigate();
@@ -77,30 +84,30 @@ export default function MarketplaceCategory() {
             {!sent ? (
               <>
                 <h2 className="text-lg font-bold text-gray-900 mb-1">
-                  בקשת הצעת מחיר מ־{quoteProvider.name}
+                  בקשת דיל מ־{quoteProvider.name}
                 </h2>
                 <p className="text-sm text-gray-500 mb-4">
                   נשלח לספק את הפרטים הבאים שכבר מילאתם:
                 </p>
                 <div className="bg-gray-50 rounded-xl p-3.5 flex flex-col gap-1.5 text-sm mb-5">
                   <div className="flex justify-between">
-                    <span className="text-gray-500">תאריך מעבר</span>
+                    <span className="text-gray-500">תאריך טיסה</span>
                     <span className="font-semibold text-gray-800">
-                      {state.user.moveDate
-                        ? formatDateHe(state.user.moveDate)
+                      {state.user.tripDate
+                        ? formatDateHe(state.user.tripDate)
                         : "-"}
                     </span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-gray-500">מסלול</span>
+                    <span className="text-gray-500">יעד</span>
                     <span className="font-semibold text-gray-800">
-                      {state.user.fromCity} ← {state.user.toCity}
+                      {state.user.departureCity} ← {state.user.resort}
                     </span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-gray-500">גודל דירה</span>
+                    <span className="text-gray-500">רמת גלישה</span>
                     <span className="font-semibold text-gray-800">
-                      {state.user.apartmentSize}
+                      {skiLevelLabels[state.user.skiLevel ?? ""] ?? "-"}
                     </span>
                   </div>
                 </div>
