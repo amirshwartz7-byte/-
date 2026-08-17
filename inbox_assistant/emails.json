@@ -1,0 +1,38 @@
+[
+  {
+    "from": "Dana Cohen <dana.cohen@brightworks.com>",
+    "subject": "Budget approval needed ASAP",
+    "date": "2026-08-14",
+    "body": "Hi, the finance team is closing the Q3 budget today and I still need your sign-off on the marketing line items. Can you approve the attached sheet before end of day? This is urgent, we lose the allocation if it's not in by the deadline."
+  },
+  {
+    "from": "Noah Levi <noah.levi@teamsync.io>",
+    "subject": "Notes from yesterday's standup",
+    "date": "2026-08-13",
+    "body": "Hey, just sharing the notes from yesterday's standup. Nothing blocking, we're on track for the sprint. I'll send the next update on Friday. Let me know if you think I missed anything."
+  },
+  {
+    "from": "HR Team <hr@brightworks.com>",
+    "subject": "Reminder: benefits enrollment deadline",
+    "date": "2026-08-15",
+    "body": "This is a reminder that open enrollment for benefits closes today at 5pm. If you haven't submitted your selections yet, please do so now, as we cannot accept late submissions. Contact HR if you have any questions."
+  },
+  {
+    "from": "Priya Nair <priya.nair@clientco.com>",
+    "subject": "Quick question about the proposal",
+    "date": "2026-08-12",
+    "body": "Thanks for sending over the proposal last week. I had one quick question about the pricing tiers in section 3. No rush, whenever you get a chance to clarify would be great."
+  },
+  {
+    "from": "GitHub <notifications@github.com>",
+    "subject": "Your weekly digest for project-alpha",
+    "date": "2026-08-11",
+    "body": "Here is your weekly summary: 4 pull requests merged, 2 issues opened, 1 issue closed. View the full activity on the repository page. This is an automated notification, no action needed."
+  },
+  {
+    "from": "Marcus Webb <marcus.webb@brightworks.com>",
+    "subject": "Server outage - need your input today",
+    "date": "2026-08-16",
+    "body": "We had a partial outage on the payments service last night. I need your input today on whether we roll back the last deploy or patch forward. This is time sensitive, please reply as soon as you can so we can close out the incident report."
+  }
+]
