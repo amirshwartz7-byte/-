@@ -112,6 +112,27 @@ description: סוכן איתור סטארטאפים - מוצא חברות שגי
 שדות לתיעוד: `date, company, website, sector, round, amount, investors, announced_on, ceo, ceo_linkedin,
 ceo_background, email, email_confidence, status, source_url, why_fit`
 
+### ב6 - עדכון הדשבורד
+
+הדשבורד הוא Artifact פרטי של עמיר: https://claude.ai/artifact/7fj8tPzjNWTkmjHPQMDYHp
+עדכן אותו בכלי `ArtifactData` עם `batch` אחד (עד 50 כתיבות, לכל מסמך קיים עם `if_version`
+שקראת ב-`list`).
+
+1. **סנכרון סטטוסים:** קרא את `leads` (`list`). לכל ליד, בדוק ב-Gmail:
+   - `draft`: אם הטיוטה כבר לא קיימת (`list_drafts` עם `to:<domain>` מחזיר ריק), אבל יש מייל שנשלח
+     ל-`<domain>` (`in:sent to:<domain>`), הסטטוס הוא `sent`. אם אין גם טיוטה וגם לא מייל שנשלח, עמיר
+     מחק את הטיוטה והסטטוס הוא `declined`.
+   - `sent`: אם הגיעה תשובה אמיתית מהדומיין (כמו בחלק א'), הסטטוס הוא `replied`. מוסיפים
+     `reply_summary` (שורה-שתיים) ו-`gmail_url` (ה-`viewUrl` של השרשור).
+   - **אסור לשנות** סטטוס `meeting` או `closed`, ואסור לגעת ב-`notes`. את אלה עמיר מעדכן בעצמו.
+2. **חברות חדשות:** לכל חברה שנבדקה בריצה, צור מסמך ב-`leads` כש-`doc_id` הוא הדומיין. השדות:
+   `company, domain, website, sector, round, amount_musd (מספר, במיליוני דולרים), investors,
+   announced_on (YYYY-MM-DD), ceo, ceo_linkedin, ceo_background, email,
+   email_confidence (verified | likely | guess), status, gmail_url, source_url, why_fit, created_at, updated_at`.
+   ה-status הוא `draft` כשהוכנה טיוטה, ו-`no_contact` כשאין מנכ"ל מאומת או מייל.
+   הטקסטים בעברית.
+3. **יומן ריצה:** צור מסמך ב-`runs` כש-`doc_id` הוא תאריך הריצה, עם השדות `date`, `found`, `drafts`, `replies` ו-`summary` (משפט-שניים).
+
 ## סיכום סוף ריצה
 
 - **חלק א':** אילו חברות ענו, ועל מי הוכנה טיוטת תקציר.
