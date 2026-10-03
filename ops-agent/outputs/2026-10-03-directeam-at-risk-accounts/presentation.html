@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Directeam: תוכנית שיקום ל-6 לקוחות בסיכון</title>
+<style>
+:root {
+  --bg:#f4f6fa; --card:#ffffff; --ink:#14213d; --muted:#5b6475; --accent:#2251d1;
+  --accent-soft:#e7edfc; --line:#dde2ec;
+}
+@media (prefers-color-scheme: dark) {
+  :root { --bg:#0f141c; --card:#171e2a; --ink:#e8ecf3; --muted:#9aa4b5; --accent:#7ea2ff;
+          --accent-soft:#1e2a44; --line:#2a3344; }
+}
+* { box-sizing:border-box; }
+html,body { margin:0; height:100%; background:var(--bg); color:var(--ink);
+  font-family:"Segoe UI","Heebo","Assistant",system-ui,-apple-system,Arial,sans-serif; }
+.slide { display:none; position:fixed; inset:0; padding:clamp(16px,4vw,56px); }
+.slide.active { display:flex; align-items:center; justify-content:center; }
+.inner { width:min(1100px,100%); max-height:100%; overflow:auto; background:var(--card);
+  border-radius:20px; padding:clamp(20px,4vw,56px); box-shadow:0 10px 40px rgba(20,33,61,.08);
+  border-top:6px solid var(--accent); }
+h1 { font-size:clamp(28px,5vw,52px); margin:0 0 12px; line-height:1.15; }
+h2 { overflow-wrap:anywhere; font-size:clamp(22px,3.2vw,36px); margin:0 0 24px; line-height:1.2; }
+h3 { font-size:20px; color:var(--accent); margin:18px 0 8px; }
+.cover .inner { text-align:center; padding:clamp(40px,8vw,96px) 24px; }
+.sub { font-size:clamp(17px,2.2vw,24px); color:var(--muted); margin:0; }
+.date { color:var(--muted); margin-top:28px; font-size:15px; }
+p, li { font-size:clamp(16px,1.9vw,22px); line-height:1.55; }
+ul, ol { padding-inline-start:1.3em; margin:8px 0; }
+li { margin:8px 0; }
+li::marker { color:var(--accent); font-weight:700; }
+strong { color:var(--accent); }
+code { background:var(--accent-soft); padding:1px 6px; border-radius:6px; font-size:.9em; }
+a { color:var(--accent); }
+table { width:100%; border-collapse:collapse; margin:12px 0; font-size:clamp(14px,1.6vw,18px); }
+th { background:var(--accent-soft); text-align:start; }
+th, td { padding:10px 12px; border-bottom:1px solid var(--line); text-align:start; vertical-align:top; }
+.kpis { display:grid; grid-template-columns:repeat(auto-fit,minmax(min(180px,100%),1fr)); gap:16px; margin:12px 0 20px; }
+.kpi { background:var(--accent-soft); border-radius:16px; padding:22px; }
+.kpi-v { font-size:clamp(30px,4.5vw,48px); font-weight:800; color:var(--accent); line-height:1.1; }
+.kpi-l { font-size:17px; margin-top:6px; font-weight:600; }
+.kpi-n { font-size:14px; color:var(--muted); margin-top:4px; }
+.flow { display:flex; flex-wrap:wrap; gap:12px; margin:12px 0 20px; }
+.step { flex:1 1 min(140px,100%); background:var(--accent-soft); border-radius:14px; padding:16px; font-weight:600;
+  font-size:clamp(15px,1.7vw,19px); position:relative; }
+.step .n { display:inline-grid; place-items:center; width:28px; height:28px; border-radius:50%;
+  background:var(--accent); color:var(--card); font-size:14px; margin-inline-end:8px; }
+.callout { border-inline-start:5px solid var(--accent); background:var(--accent-soft); padding:14px 18px;
+  border-radius:10px; font-size:clamp(16px,1.9vw,21px); margin:16px 0; font-weight:600; }
+.foot { color:var(--muted); font-size:13px; margin-top:20px; }
+.bar { position:fixed; bottom:0; inset-inline:0; height:4px; background:var(--line); }
+.bar i { display:block; height:100%; background:var(--accent); transition:width .25s; }
+.nav { position:fixed; bottom:14px; inset-inline-end:18px; display:flex; gap:8px; align-items:center;
+  color:var(--muted); font-size:14px; }
+.nav button { border:1px solid var(--line); background:var(--card); color:var(--ink); border-radius:10px;
+  width:38px; height:38px; font-size:18px; cursor:pointer; }
+@media print {
+  .slide { display:flex !important; position:relative; height:100vh; page-break-after:always; }
+  .nav, .bar { display:none; }
+  .inner { box-shadow:none; }
+}
+</style>
+</head>
+<body>
+<section class="slide cover"><div class="inner"><h1>Directeam: תוכנית שיקום ל-6 לקוחות בסיכון</h1><p class="sub">14 יום חדר מצב + מנגנון שמונע את הפעם הבאה</p><p class="date">2026-10-03</p></div></section>
+<section class="slide"><div class="inner"><h2>6 לקוחות בסיכון = כ-₪0.5M הפסד צפוי</h2><div class="content"><div class="kpis"><div class="kpi"><div class="kpi-v">6</div><div class="kpi-l">לקוחות בסיכון</div><div class="kpi-n">3 יחסים · 2 עיכובים · 1 גדול</div></div><div class="kpi"><div class="kpi-v">₪1.2M</div><div class="kpi-l">רווח שנתי חשוף</div><div class="kpi-n">הנחה</div></div><div class="kpi"><div class="kpi-v">₪498K</div><div class="kpi-l">הפסד צפוי בלי טיפול</div><div class="kpi-n">חישוב</div></div></div>
+<div class="callout">לגייס לקוח חדש עולה פי 5-25 יותר משימור לקוח קיים</div>
+<div class="foot">מקורות: HBR 2014. הסכומים מבוססים על הנחות עבודה ויאומתו מול נתוני CRM.</div></div></div></section>
+<section class="slide"><div class="inner"><h2>זה לא 6 בעיות. אלה 3 גורמים משותפים</h2><div class="content"><table><thead><tr><th>מה רואים</th><th>מה באמת קורה</th></tr></thead><tbody><tr><td>2 לקוחות בעיכוב</td><td>זמן המומחים מוקצה למי שצועק, לא לפי ערך</td></tr><tr><td>3 יחסים לא טובים</td><td>כל לקוח תלוי באדם אחד</td></tr><tr><td>לקוח גדול מאוכזב</td><td>אין התרעה מוקדמת: גילינו מאוחר</td></tr></tbody></table>
+<div class="callout">צוואר הבקבוק: זמן המומחים הבכירים, בלי תעדוף ובלי נראות</div></div></div></section>
+<section class="slide"><div class="inner"><h2>3 דרכים. ממליצים על האמצעית</h2><div class="content"><table><thead><tr><th>חלופה</th><th>השפעה</th><th>זמן</th><th>סיכון</th></tr></thead><tbody><tr><td>כיבוי שריפות</td><td>בינונית</td><td>ימים</td><td>יחזור שוב</td></tr><tr><td><strong>חדר מצב + ניטור קל</strong></td><td><strong>גבוהה</strong></td><td><strong>2-4 שבועות</strong></td><td><strong>נמוך</strong></td></tr><tr><td>ארגון מחדש + כלים</td><td>גבוהה</td><td>3-6 חודשים</td><td>הלקוחות יעזבו קודם</td></tr></tbody></table></div></div></section>
+<section class="slide"><div class="inner"><h2>סדר הטיפול: לפי כסף × דחיפות</h2><div class="content"><ol><li><strong>הלקוח הגדול:</strong> שיחת CEO תוך 48 שעות, מהנדס ייעודי, מספרים על השולחן</li><li><strong>2 הלקוחות בעיכוב:</strong> תאריכים כנים, אבני דרך קטנות, MVP קודם, עדכון פעמיים בשבוע</li><li><strong>3 היחסים:</strong> אבחון "אדם / תהליך / ציפייה", איש קשר שני, ואם צריך החלפת AM</li></ol>
+<div class="foot">פעולה מהירה: 82% מהלקוחות שבעיה גדולה שלהם נפתרה מהר חזרו לקנות (TARP)</div></div></div></section>
+<section class="slide"><div class="inner"><h2>פרוטוקול שיקום: אותו תהליך לכל לקוח אדום</h2><div class="content"><div class="flow"><div class="step"><span class="n">1</span>התרעה</div><div class="step"><span class="n">2</span>שיחת הקשבה (48 שעות)</div><div class="step"><span class="n">3</span>תוכנית בכתב (5 ימים)</div><div class="step"><span class="n">4</span>ביצוע + עדכון שבועי</div><div class="step"><span class="n">5</span>3 שבועות ירוקים ← QBR</div></div>
+<ul><li>לא ירוק אחרי 3 שבועות: אסקלציה ל-CEO</li><li>לכל שלב יש בעלים ו-SLA</li></ul></div></div></section>
+<section class="slide"><div class="inner"><h2>השגרה שמונעת את הפעם הבאה: 30 דקות בשבוע</h2><div class="content"><p>רמזור לכל לקוח. תשובה אדומה אחת = לקוח אדום:</p>
+<ul><li><strong>Delivery:</strong> יש תוצר באיחור?</li><li><strong>יחסים:</strong> יש לנו 2 אנשי קשר ושיחה בשבועיים האחרונים?</li><li><strong>ערך:</strong> הצגנו את החיסכון ברבעון האחרון?</li><li><strong>שירות:</strong> יש קריאה מעל ה-SLA?</li><li><strong>תחושה:</strong> ה-AM מרגיש שמשהו לא בסדר?</li></ul></div></div></section>
+<section class="slide"><div class="inner"><h2>בנוי לגדול</h2><div class="content"><div class="flow"><div class="step"><span class="n">1</span>היום: גיליון רמזור ידני</div><div class="step"><span class="n">2</span>פי 3: Health Score אוטומטי ב-CRM</div><div class="step"><span class="n">3</span>פי 10: רמות שירות + צוותי CS</div></div>
+<ul><li>הטריגר לשלב הבא: סקירה ארוכה מ-60 דקות, או ניצולת מומחים מעל 80%</li></ul>
+<div class="foot">ניצולת מעל 80% מגבירה שחיקה ועזיבה (SPI Research)</div></div></div></section>
+<section class="slide"><div class="inner"><h2>המספרים: התוכנית מחזירה את עצמה</h2><div class="content"><div class="kpis"><div class="kpi"><div class="kpi-v">₪127K</div><div class="kpi-l">עלות</div><div class="kpi-n">3 חודשים</div></div><div class="kpi"><div class="kpi-v">₪300K</div><div class="kpi-l">הפסד שנמנע</div><div class="kpi-n">תרחיש בסיס</div></div><div class="kpi"><div class="kpi-v">136%</div><div class="kpi-l">ROI</div><div class="kpi-n">שמרני 0% · אופטימי 264%</div></div><div class="kpi"><div class="kpi-v">כ-5</div><div class="kpi-l">חודשים לאיזון</div><div class="kpi-n">חישוב</div></div></div>
+<div class="foot">לא כולל את ההגנה על שאר ה-100+ לקוחות</div></div></div></section>
+<section class="slide"><div class="inner"><h2>איך נדע שזה עובד</h2><div class="content"><table><thead><tr><th>מדד</th><th>יעד</th></tr></thead><tbody><tr><td>תגובה לאסקלציה</td><td>48 שעות לכל היותר</td></tr><tr><td>אבני דרך בזמן</td><td>90% לפחות (ממוצע ענפי: 73%)</td></tr><tr><td>לקוחות שחזרו לירוק</td><td>4 מתוך 6 ביום 60</td></tr><tr><td>הכנסה משומרת מה-6</td><td>90% לפחות ביום 90</td></tr><tr><td>NPS יחסים</td><td>33 לפחות</td></tr></tbody></table></div></div></section>
+<section class="slide"><div class="inner"><h2>30-60-90</h2><div class="content"><ol><li><strong>ימים 1-14:</strong> חדר מצב יומי, 6 תוכניות שיקום, אבן דרך ראשונה נמסרת</li><li><strong>ימים 15-30:</strong> רמזור שבועי לכל הלקוחות, Change Request, התאמת AMs</li><li><strong>ימים 31-60:</strong> QBR עם נתוני חיסכון ל-Top 20, תעדוף מומחים לפי ערך × סיכון</li><li><strong>ימים 61-90:</strong> Health Score אוטומטי, NPS ראשון, החלטה על רמות שירות</li></ol></div></div></section>
+<section class="slide"><div class="inner"><h2>מה צריך מכם השבוע</h2><div class="content"><ul><li><strong>CEO:</strong> שיחה עם הלקוח הגדול תוך 48 שעות</li><li><strong>CTO:</strong> מהנדס בכיר ייעודי ל-30 יום + כ-₪60K לקבלן זמני</li><li><strong>כספים:</strong> רווחיות לפי לקוח, עד סוף השבוע</li><li><strong>כל ה-AMs:</strong> 30 דקות בשבוע לסקירת לקוחות</li></ul></div></div></section>
+<div class="bar"><i id="bar"></i></div>
+<div class="nav"><button id="prev" aria-label="הקודם">&#8250;</button>
+<span id="count" dir="ltr"></span><button id="next" aria-label="הבא">&#8249;</button></div>
+<script>
+(function () {
+  var slides = document.querySelectorAll('.slide'), i = 0, total = 12;
+  var rtl = document.documentElement.dir === 'rtl';
+  if (!rtl) { document.getElementById('prev').innerHTML = '&#8249;'; document.getElementById('next').innerHTML = '&#8250;'; }
+  function show(n) {
+    i = Math.max(0, Math.min(total - 1, n));
+    slides.forEach(function (s, k) { s.classList.toggle('active', k === i); });
+    document.getElementById('count').textContent = (i + 1) + ' / ' + total;
+    document.getElementById('bar').style.width = ((i + 1) / total * 100) + '%';
+    try { history.replaceState(null, '', '#' + (i + 1)); } catch (e) {}
+  }
+  document.getElementById('next').onclick = function () { show(i + 1); };
+  document.getElementById('prev').onclick = function () { show(i - 1); };
+  document.addEventListener('keydown', function (e) {
+    var fwd = rtl ? 'ArrowLeft' : 'ArrowRight', back = rtl ? 'ArrowRight' : 'ArrowLeft';
+    if (e.key === fwd || e.key === ' ' || e.key === 'PageDown') show(i + 1);
+    if (e.key === back || e.key === 'PageUp') show(i - 1);
+    if (e.key === 'Home') show(0);
+    if (e.key === 'End') show(total - 1);
+  });
+  var x0 = null;
+  document.addEventListener('touchstart', function (e) { x0 = e.touches[0].clientX; });
+  document.addEventListener('touchend', function (e) {
+    if (x0 === null) return;
+    var dx = e.changedTouches[0].clientX - x0; x0 = null;
+    if (Math.abs(dx) < 40) return;
+    var forward = rtl ? dx > 0 : dx < 0;
+    show(i + (forward ? 1 : -1));
+  });
+  show((parseInt(location.hash.slice(1), 10) || 1) - 1);
+})();
+</script>
+</body>
+</html>
