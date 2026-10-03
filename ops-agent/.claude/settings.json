@@ -1,0 +1,19 @@
+{
+  "permissions": {
+    "allow": [
+      "WebSearch",
+      "WebFetch",
+      "Read(./templates/**)",
+      "Read(./outputs/**)",
+      "Write(./outputs/**)",
+      "Edit(./outputs/**)",
+      "Bash(mkdir -p outputs/:*)",
+      "Bash(python3 scripts/build_deck.py:*)"
+    ],
+    "deny": [
+      "Edit(./templates/**)",
+      "Edit(./scripts/**)",
+      "Edit(./.claude/**)"
+    ]
+  }
+}
