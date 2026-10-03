@@ -10,7 +10,10 @@ description: סוכן מנהל אופרציה עסקית בכיר - מקבל מ�
 ומסביר דברים מורכבים בפשטות.
 
 **הקלט:** משימה / בעיה / יעד עסקי מהמשתמש (`$ARGUMENTS` או ההודעה האחרונה).
-**הפלט:** תיקייה `outputs/<YYYY-MM-DD>-<slug>/` עם:
+**קבצי עזר** (בתיקיית הסקיל הזו, `<skill-dir>` = התיקייה שבה נמצא הקובץ הזה):
+`templates/solution-template.md`, `templates/slides-template.md`, `scripts/build_deck.py`, `researcher-brief.md`.
+
+**הפלט:** תיקייה `outputs/<YYYY-MM-DD>-<slug>/` (בתיקיית העבודה הנוכחית) עם:
 - `solution.md` - מסמך הפתרון המלא
 - `slides.md` + `presentation.html` - מצגת פשוטה של התהליך (8-12 שקפים)
 
@@ -45,8 +48,8 @@ description: סוכן מנהל אופרציה עסקית בכיר - מקבל מ�
 
 ## שלב 3 - מחקר באינטרנט
 
-הפעל במקביל 2-4 סוכני `ops-researcher` (כלי Agent, `subagent_type: ops-researcher`),
-כל אחד עם זווית אחרת. זוויות מומלצות:
+הפעל במקביל 2-4 סוכני מחקר (כלי Agent, `subagent_type: ops-researcher` אם קיים, אחרת `general-purpose`
+עם התוכן של `<skill-dir>/researcher-brief.md` בתחילת ההנחיה), כל אחד עם זווית אחרת. זוויות מומלצות:
 - **Benchmarks ומספרים** - נתוני שוק, ממוצעים בתעשייה, יחסי המרה, עלויות טיפוסיות.
 - **Best practices ו-case studies** - איך חברות דומות פתרו את זה, מה עבד ומה נכשל.
 - **כלים ואוטומציה** - אילו כלים/מערכות מקובלים, עלות משוערת, מה אפשר לאוטמט.
@@ -83,21 +86,22 @@ description: סוכן מנהל אופרציה עסקית בכיר - מקבל מ�
 ## שלב 6 - כתיבת המסמך
 
 צור את התיקייה `outputs/<YYYY-MM-DD>-<slug>/` (slug קצר באנגלית, למשל `onboarding-scale`).
-כתוב את `solution.md` לפי המבנה ב-`templates/solution-template.md` - בדיוק לפי הסדר שם.
+כתוב את `solution.md` לפי המבנה ב-`<skill-dir>/templates/solution-template.md` - בדיוק לפי הסדר שם.
 **סיכום מנהלים** בראש המסמך: עד 5 שורות - הבעיה, ההמלצה, ההשפעה במספרים, מה צריך להחליט עכשיו.
 
 ## שלב 7 - המצגת
 
-1. כתוב `slides.md` לפי `templates/slides-template.md` (התחביר מוסבר שם).
+1. כתוב `slides.md` לפי `<skill-dir>/templates/slides-template.md` (התחביר מוסבר שם).
    8-12 שקפים. רעיון אחד לשקף. עד 5 בולטים או טבלה אחת או תרשים אחד לשקף.
    כותרת כל שקף = המסקנה (לא "ניתוח", אלא "צוואר הבקבוק הוא שלב האישור").
 2. מבנה מומלץ: כותרת → הבעיה במספרים → למה זה קורה → החלופות → ההמלצה →
    התהליך החדש (שלבים) → איך זה עובד בסקייל → המספרים (ROI) → מדדי הצלחה → 30-60-90 → מה צריך מכם.
 3. בנה את ה-HTML:
    ```bash
-   python3 scripts/build_deck.py outputs/<folder>/slides.md
+   python3 <skill-dir>/scripts/build_deck.py outputs/<folder>/slides.md
    ```
    הסקריפט יוצר `presentation.html` באותה תיקייה (קובץ יחיד, עובד אופליין, ניווט בחיצים, הדפסה ל-PDF).
+   אם אין אפשרות להריץ Python (למשל בצ'אט של claude.ai) - הגש את המצגת כ-Artifact / קובץ pptx באותו מבנה שקפים.
 
 ## שלב 8 - בקרת איכות לפני מסירה
 

@@ -19,9 +19,9 @@
 |---|---|
 | `.claude/skills/ops-strategist/SKILL.md` | התהליך המלא של הסוכן |
 | `.claude/agents/ops-researcher.md` | סוכן משנה למחקר רשת (מחזיר ממצאים עם קישורים) |
-| `templates/solution-template.md` | מבנה מסמך הפתרון |
-| `templates/slides-template.md` | מבנה המצגת + הסבר התחביר (כרטיסי KPI, תרשים שלבים) |
-| `scripts/build_deck.py` | ממיר `slides.md` למצגת HTML עצמאית (בלי תלויות) |
+| `.claude/skills/ops-strategist/templates/solution-template.md` | מבנה מסמך הפתרון |
+| `.claude/skills/ops-strategist/templates/slides-template.md` | מבנה המצגת + הסבר התחביר (כרטיסי KPI, תרשים שלבים) |
+| `.claude/skills/ops-strategist/scripts/build_deck.py` | ממיר `slides.md` למצגת HTML עצמאית (בלי תלויות) |
 | `outputs/` | כאן נשמרים הפתרונות, תיקייה לכל משימה |
 | `.claude/settings.json` | הרשאות: חיפוש וקריאה ברשת, כתיבה רק ל-`outputs/` |
 
@@ -43,7 +43,7 @@ outputs/2026-10-03-support-scale/
 └── presentation.html  # המצגת - פותחים בדפדפן
 ```
 - **ניווט במצגת:** חיצים / רווח / החלקה בנייד. `Ctrl+P` → "שמור כ-PDF" לייצוא.
-- **עריכה:** משנים את `slides.md` ומריצים `python3 scripts/build_deck.py outputs/<folder>/slides.md`.
+- **עריכה:** משנים את `slides.md` ומריצים `python3 .claude/skills/ops-strategist/scripts/build_deck.py outputs/<folder>/slides.md`.
 - **פורמטים נוספים:** אפשר לבקש מהסוכן לייצא ל-Word, PowerPoint או Google Docs/Slides.
 
 ## עקרונות
@@ -51,3 +51,11 @@ outputs/2026-10-03-support-scale/
 - המלצה אחת ברורה, לא רק סקירת אפשרויות.
 - כל שלב בתהליך: בעלים, SLA, ומה מאוטמט.
 - פשוט וממוקד: עובד חדש בצוות מבין בקריאה אחת.
+
+## התקנה כסוכן אישי (זמין מכל מקום)
+- **claude.ai / אפליקציה:** Settings → Capabilities → Skills → Upload skill → בחר את `dist/ops-strategist.zip`.
+- **Claude Code מקומי (לכל הפרויקטים):**
+  ```bash
+  cp -r ops-agent/.claude/skills/ops-strategist ~/.claude/skills/
+  cp ops-agent/.claude/agents/ops-researcher.md ~/.claude/agents/
+  ```

@@ -3,16 +3,15 @@
     "allow": [
       "WebSearch",
       "WebFetch",
-      "Read(./templates/**)",
+      "Read(./.claude/skills/ops-strategist/**)",
       "Read(./outputs/**)",
       "Write(./outputs/**)",
       "Edit(./outputs/**)",
       "Bash(mkdir -p outputs/:*)",
-      "Bash(python3 scripts/build_deck.py:*)"
+      "Bash(python3 .claude/skills/ops-strategist/scripts/build_deck.py:*)",
+      "Bash(python3 ~/.claude/skills/ops-strategist/scripts/build_deck.py:*)"
     ],
     "deny": [
-      "Edit(./templates/**)",
-      "Edit(./scripts/**)",
       "Edit(./.claude/**)"
     ]
   }

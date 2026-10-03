@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Build a self-contained HTML slide deck from slides.md.
 
-Usage: python3 scripts/build_deck.py <path/to/slides.md> [output.html]
+Usage: python3 <skill-dir>/scripts/build_deck.py <path/to/slides.md> [output.html]
 
 Syntax is documented in templates/slides-template.md. No dependencies.
 """
