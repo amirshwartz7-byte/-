@@ -11,11 +11,14 @@ import PackageBuilder from "./pages/PackageBuilder";
 import Budget from "./pages/Budget";
 import Books from "./pages/Books";
 import Profile from "./pages/Profile";
+import Services from "./pages/Services";
+import MyMove from "./pages/MyMove";
 import AdminLayout from "./pages/admin/AdminLayout";
 import AdminUsers from "./pages/admin/AdminUsers";
 import AdminProviders from "./pages/admin/AdminProviders";
 import AdminLeads from "./pages/admin/AdminLeads";
 import AdminContent from "./pages/admin/AdminContent";
+import AdminServices from "./pages/admin/AdminServices";
 
 function FullScreenSpinner() {
   return (
@@ -108,6 +111,15 @@ export default function App() {
     <Routes>
       <Route path="/" element={<LandingOrRedirect />} />
       <Route path="/onboarding" element={<OnboardingGuard />} />
+      <Route path="/services" element={<Services />} />
+      <Route
+        path="/my-move"
+        element={
+          <RequireAuth>
+            <MyMove />
+          </RequireAuth>
+        }
+      />
       <Route
         path="/dashboard"
         element={
@@ -183,6 +195,7 @@ export default function App() {
         <Route index element={<Navigate to="users" replace />} />
         <Route path="users" element={<AdminUsers />} />
         <Route path="providers" element={<AdminProviders />} />
+        <Route path="services" element={<AdminServices />} />
         <Route path="leads" element={<AdminLeads />} />
         <Route path="content" element={<AdminContent />} />
       </Route>

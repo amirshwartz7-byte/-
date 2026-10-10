@@ -2,6 +2,7 @@ import { NavLink, Outlet, useNavigate } from "react-router-dom";
 
 const tabs = [
   { to: "/admin/users", label: "משתמשים", icon: "👥" },
+  { to: "/admin/services", label: "הזמנות שירות", icon: "🚚" },
   { to: "/admin/providers", label: "ספקים", icon: "🏢" },
   { to: "/admin/leads", label: "לידים", icon: "📊" },
   { to: "/admin/content", label: "תוכן", icon: "📝" },

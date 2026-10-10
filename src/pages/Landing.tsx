@@ -159,6 +159,13 @@ export default function Landing() {
             <span className="text-lg">🔵</span> המשך עם Google (בקרוב)
           </button>
 
+          <button
+            onClick={() => navigate("/services")}
+            className="w-full py-3 rounded-xl text-sm font-semibold text-accent-600 bg-orange-50"
+          >
+            🚚 לא רוצים להתעסק? אנחנו עושים את כל המעבר בשבילכם
+          </button>
+
           <p className="text-[11px] text-gray-400 text-center leading-relaxed">
             בהמשך אתם מאשרים את תנאי השימוש ומדיניות הפרטיות
           </p>

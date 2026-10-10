@@ -87,6 +87,20 @@ export default function Dashboard() {
           )}
         </div>
 
+        <button
+          onClick={() => navigate("/my-move")}
+          className="bg-brand-600 text-white rounded-2xl p-4 shadow-floating text-right flex items-center gap-3"
+        >
+          <span className="text-3xl">🚚</span>
+          <span className="flex-1">
+            <span className="block font-bold">המעבר שלי: שירות מלא</span>
+            <span className="block text-xs opacity-80">
+              אנחנו מתאמים את כל הספקים, ואתם עוקבים מכאן
+            </span>
+          </span>
+          <span className="text-lg">←</span>
+        </button>
+
         <div className="grid grid-cols-2 gap-3">
           <button
             onClick={() => navigate("/package")}

@@ -208,6 +208,82 @@ drop policy if exists "package_selections_owner" on public.package_selections;
 create policy "package_selections_owner" on public.package_selections
   for all using (auth.uid() = user_id) with check (auth.uid() = user_id);
 
+-- ============ SERVICE REQUESTS (הזמנות שירות מלא) ============
+-- בקשות מעמוד החבילות. גם גולשים לא מחוברים יכולים לשלוח בקשה (insert בלבד),
+-- רק הלקוח המחובר רואה את הבקשה שלו, ורק אדמין מעדכן.
+create table if not exists public.service_requests (
+  id uuid primary key default gen_random_uuid(),
+  user_id uuid references public.profiles (id) on delete set null,
+  name text not null,
+  phone text not null,
+  email text,
+  from_city text,
+  to_city text,
+  move_date date,
+  apartment_size text not null,
+  package_id text not null check (package_id in ('basic', 'full', 'premium')),
+  addons text[] not null default '{}',
+  quoted_price numeric not null default 0,
+  final_price numeric,
+  status text not null default 'new'
+    check (status in ('new', 'contacted', 'booked', 'in_progress', 'completed', 'cancelled')),
+  notes text,
+  created_at timestamptz not null default now()
+);
+
+alter table public.service_requests enable row level security;
+
+drop policy if exists "service_requests_owner_or_admin_select" on public.service_requests;
+create policy "service_requests_owner_or_admin_select" on public.service_requests
+  for select using (auth.uid() = user_id or public.is_admin());
+
+drop policy if exists "service_requests_public_insert" on public.service_requests;
+create policy "service_requests_public_insert" on public.service_requests
+  for insert to anon, authenticated
+  with check (
+    status = 'new'
+    and final_price is null
+    and notes is null
+    and (user_id is null or user_id = auth.uid())
+  );
+
+drop policy if exists "service_requests_admin_update" on public.service_requests;
+create policy "service_requests_admin_update" on public.service_requests
+  for update using (public.is_admin()) with check (public.is_admin());
+
+drop policy if exists "service_requests_admin_delete" on public.service_requests;
+create policy "service_requests_admin_delete" on public.service_requests
+  for delete using (public.is_admin());
+
+-- ============ SERVICE ITEMS (שלבי תוכנית המעבר של לקוח) ============
+create table if not exists public.service_items (
+  id uuid primary key default gen_random_uuid(),
+  request_id uuid not null references public.service_requests (id) on delete cascade,
+  key text not null,
+  label text not null,
+  emoji text,
+  scheduled_date date,
+  vendor_name text,
+  status text not null default 'pending' check (status in ('pending', 'scheduled', 'done')),
+  sort int not null default 0
+);
+
+alter table public.service_items enable row level security;
+
+drop policy if exists "service_items_owner_or_admin_select" on public.service_items;
+create policy "service_items_owner_or_admin_select" on public.service_items
+  for select using (
+    public.is_admin()
+    or exists (
+      select 1 from public.service_requests r
+      where r.id = request_id and r.user_id = auth.uid()
+    )
+  );
+
+drop policy if exists "service_items_admin_write" on public.service_items;
+create policy "service_items_admin_write" on public.service_items
+  for all using (public.is_admin()) with check (public.is_admin());
+
 -- ============ SEED DATA: ספקים ============
 insert into public.providers (id, category, name, rating, price_tag, avg_price, deal_tag, description, phone, logo_emoji)
 values

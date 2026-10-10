@@ -111,3 +111,44 @@ export interface AppState {
   providers: Provider[];
   taskTemplateContent: TaskTemplateContent[];
 }
+
+export type ServiceRequestStatus =
+  | "new"
+  | "contacted"
+  | "booked"
+  | "in_progress"
+  | "completed"
+  | "cancelled";
+
+export interface ServiceRequest {
+  id: string;
+  userId: string | null;
+  name: string;
+  phone: string;
+  email: string;
+  fromCity: string;
+  toCity: string;
+  moveDate: string | null;
+  apartmentSize: ApartmentSize;
+  packageId: string;
+  addons: string[];
+  quotedPrice: number;
+  finalPrice: number | null;
+  status: ServiceRequestStatus;
+  notes: string;
+  createdAt: string;
+}
+
+export type ServiceItemStatus = "pending" | "scheduled" | "done";
+
+export interface ServiceItem {
+  id: string;
+  requestId: string;
+  key: string;
+  label: string;
+  emoji: string;
+  scheduledDate: string | null;
+  vendorName: string;
+  status: ServiceItemStatus;
+  sort: number;
+}
