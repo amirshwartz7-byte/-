@@ -17,6 +17,7 @@ import { submitServiceRequest } from "../lib/serviceApi";
 import { todayISO } from "../utils/dateUtils";
 import type { ApartmentSize } from "../types";
 import { BRAND } from "../brand";
+import Logo from "../components/Logo";
 
 const howItWorks = [
   { emoji: "📝", title: "בוחרים חבילה", text: "מקבלים הערכת מחיר מיידית לפי גודל הדירה" },
@@ -143,7 +144,7 @@ export default function Services() {
     <div className="app-shell">
       <header className="sticky top-0 z-30 bg-white/90 backdrop-blur border-b border-gray-100 px-4 py-3 flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <span className="text-xl">{BRAND.logo}</span>
+          <Logo size={30} />
           <span className="font-extrabold text-brand-600">{BRAND.name}</span>
         </div>
         <button

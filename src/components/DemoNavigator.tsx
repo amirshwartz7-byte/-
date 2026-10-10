@@ -3,6 +3,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { useApp } from "../store/AppContext";
 import { DEMO_EMAIL } from "../lib/mockSupabase";
 import { BRAND } from "../brand";
+import Logo from "./Logo";
 
 interface Screen {
   label: string;
@@ -112,7 +113,7 @@ export default function DemoNavigator() {
     <>
       <aside className="hidden xl:block fixed top-4 left-4 bottom-4 w-64 bg-white rounded-2xl border border-gray-200 shadow-card p-4 overflow-y-auto z-50">
         <div className="flex items-center gap-2 mb-4">
-          <span className="text-2xl">{BRAND.logo}</span>
+          <Logo size={36} />
           <div>
             <p className="font-extrabold text-brand-600 leading-none">{BRAND.name}</p>
             <p className="text-[11px] text-gray-400">ניווט בין המסכים</p>

@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useApp } from "../store/AppContext";
 import { BRAND } from "../brand";
+import Logo from "../components/Logo";
 
 type Mode = "signin" | "signup";
 
@@ -55,7 +56,7 @@ export default function Landing() {
     <div className="app-shell">
       <div className="flex-1 flex flex-col justify-between px-6 py-8">
         <div className="text-center pt-4">
-          <div className="text-5xl mb-3">{BRAND.logo}</div>
+          <Logo size={96} className="mx-auto mb-2" />
           <h1 className="text-3xl font-extrabold text-brand-600 mb-1">
             {BRAND.name}
           </h1>

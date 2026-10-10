@@ -2,6 +2,5 @@
 export const BRAND = {
   name: "Hoppa",
   nameHe: "הופה",
-  logo: "🦘",
   tagline: "עוברים דירה בהופה",
 } as const;

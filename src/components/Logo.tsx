@@ -1,0 +1,55 @@
+// הלוגו של Hoppa: קנגורו שקופץ קדימה עם קרטון מעבר
+export default function Logo({
+  size = 40,
+  className,
+}: {
+  size?: number;
+  className?: string;
+}) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 64 64"
+      width={size}
+      height={size}
+      className={className}
+      role="img"
+      aria-label="Hoppa"
+    >      <g transform="translate(64 0) scale(-1 1)">
+        {/* motion lines */}
+        <g stroke="#b9d3ff" strokeWidth="2.5" strokeLinecap="round">
+          <path d="M3 28h7"/><path d="M1 35h8"/>
+        </g>
+        {/* tail */}
+        <path d="M22 44 C13 47 8 52 4 59" fill="none" stroke="#2148f0" strokeWidth="5.5" strokeLinecap="round"/>
+        {/* haunch + foot */}
+        <circle cx="26" cy="45" r="9.5" fill="#3466ff"/>
+        <rect x="23" y="52" width="22" height="6" rx="3" fill="#2148f0"/>
+        {/* body */}
+        <ellipse cx="30" cy="35" rx="10" ry="14" transform="rotate(-18 30 35)" fill="#3466ff"/>
+        {/* neck */}
+        <ellipse cx="36" cy="22" rx="4.8" ry="7" transform="rotate(22 36 22)" fill="#3466ff"/>
+        {/* head */}
+        <ellipse cx="40" cy="15" rx="7.5" ry="6.5" transform="rotate(12 40 15)" fill="#3466ff"/>
+        <ellipse cx="47" cy="18" rx="4.5" ry="3.4" transform="rotate(18 47 18)" fill="#3466ff"/>
+        <circle cx="51" cy="19.3" r="1.3" fill="#1a2e79"/>
+        {/* ears */}
+        <ellipse cx="35" cy="7" rx="2.4" ry="5.5" transform="rotate(-25 35 7)" fill="#2148f0"/>
+        <ellipse cx="39.5" cy="6" rx="2.4" ry="5.5" transform="rotate(-8 39.5 6)" fill="#3466ff"/>
+        {/* eye */}
+        <circle cx="42.5" cy="13.5" r="1.6" fill="#fff"/>
+        <circle cx="43" cy="13.6" r="0.8" fill="#1a2e79"/>
+        {/* box */}
+        <rect x="34" y="25" width="17" height="15" rx="2" fill="#ff8a3d"/>
+        <path d="M34 29.5h17" stroke="#f0701c" strokeWidth="1.4"/>
+        <rect x="40.5" y="25" width="4" height="4.5" fill="#ffd0ad"/>
+        {/* arms holding the box */}
+        <rect x="31.5" y="28" width="7" height="4" rx="2" fill="#2148f0"/>
+        <rect x="31.5" y="35" width="7" height="4" rx="2" fill="#2148f0"/>
+        {/* paws on the far side of the box */}
+        <circle cx="50.5" cy="30" r="2.3" fill="#2148f0"/>
+        <circle cx="50.5" cy="37" r="2.3" fill="#2148f0"/>
+      </g>
+    </svg>
+  );
+}

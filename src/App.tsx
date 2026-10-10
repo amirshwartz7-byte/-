@@ -19,13 +19,13 @@ import AdminProviders from "./pages/admin/AdminProviders";
 import AdminLeads from "./pages/admin/AdminLeads";
 import AdminContent from "./pages/admin/AdminContent";
 import AdminServices from "./pages/admin/AdminServices";
-import { BRAND } from "./brand";
+import Logo from "./components/Logo";
 
 function FullScreenSpinner() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50">
       <div className="text-center">
-        <div className="text-3xl mb-2 animate-pulse">{BRAND.logo}</div>
+        <Logo size={56} className="mx-auto mb-2 animate-pulse" />
         <p className="text-sm text-gray-400">טוען...</p>
       </div>
     </div>
