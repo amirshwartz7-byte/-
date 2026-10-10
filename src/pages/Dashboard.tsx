@@ -48,7 +48,7 @@ export default function Dashboard() {
           <div className="flex items-center justify-between mb-2">
             <p className="font-semibold text-gray-800">התקדמות המשימות</p>
             <span className="text-sm font-bold text-brand-600">
-              {percent}% Done
+              {percent}% הושלם
             </span>
           </div>
           <ProgressBar percent={percent} />

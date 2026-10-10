@@ -16,6 +16,7 @@ import {
 import { submitServiceRequest } from "../lib/serviceApi";
 import { todayISO } from "../utils/dateUtils";
 import type { ApartmentSize } from "../types";
+import { BRAND } from "../brand";
 
 const howItWorks = [
   { emoji: "📝", title: "בוחרים חבילה", text: "מקבלים הערכת מחיר מיידית לפי גודל הדירה" },
@@ -94,7 +95,7 @@ export default function Services() {
 
   if (submitted) {
     const wa = whatsappLink(
-      `היי, השארתי בקשה לחבילת ${pkg?.name} ב-Done (${name}). אשמח לתאם שיחה.`
+      `היי, השארתי בקשה לחבילת ${pkg?.name} ב-${BRAND.name} (${name}). אשמח לתאם שיחה.`
     );
     return (
       <div className="app-shell">
@@ -142,8 +143,8 @@ export default function Services() {
     <div className="app-shell">
       <header className="sticky top-0 z-30 bg-white/90 backdrop-blur border-b border-gray-100 px-4 py-3 flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <span className="text-xl">📦</span>
-          <span className="font-extrabold text-brand-600">Done</span>
+          <span className="text-xl">{BRAND.logo}</span>
+          <span className="font-extrabold text-brand-600">{BRAND.name}</span>
         </div>
         <button
           onClick={() => navigate(session ? "/dashboard" : "/")}
@@ -347,7 +348,7 @@ export default function Services() {
                 onChange={(e) => setConsent(e.target.checked)}
                 className="mt-0.5"
               />
-              אני מאשר/ת ל-Done ליצור איתי קשר ולשתף את פרטי המעבר עם הספקים שיבצעו
+              אני מאשר/ת ל-{BRAND.name} ליצור איתי קשר ולשתף את פרטי המעבר עם הספקים שיבצעו
               את השירותים בחבילה.
             </label>
 

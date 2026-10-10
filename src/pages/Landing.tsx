@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useApp } from "../store/AppContext";
+import { BRAND } from "../brand";
 
 type Mode = "signin" | "signup";
 
@@ -54,14 +55,14 @@ export default function Landing() {
     <div className="app-shell">
       <div className="flex-1 flex flex-col justify-between px-6 py-8">
         <div className="text-center pt-4">
-          <div className="text-5xl mb-3">📦</div>
+          <div className="text-5xl mb-3">{BRAND.logo}</div>
           <h1 className="text-3xl font-extrabold text-brand-600 mb-1">
-            Done
+            {BRAND.name}
           </h1>
           <p className="text-gray-500 leading-relaxed">
-            מנהלים לכם את המעבר דירה
+            {BRAND.tagline}
             <br />
-            מא&apos; ועד ת&apos;
+            מנהלים לכם את המעבר מא&apos; ועד ת&apos;
           </p>
         </div>
 

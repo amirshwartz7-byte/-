@@ -5,7 +5,8 @@ import "./index.css";
 import App from "./App.tsx";
 import SetupRequired from "./pages/SetupRequired.tsx";
 import { AppProvider } from "./store/AppContext";
-import { isSupabaseConfigured } from "./lib/supabaseClient";
+import { isDemoMode, isSupabaseConfigured } from "./lib/supabaseClient";
+import DemoNavigator from "./components/DemoNavigator.tsx";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
@@ -13,6 +14,7 @@ createRoot(document.getElementById("root")!).render(
       <HashRouter>
         <AppProvider>
           <App />
+          {isDemoMode && <DemoNavigator />}
         </AppProvider>
       </HashRouter>
     ) : (

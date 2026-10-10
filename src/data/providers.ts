@@ -69,7 +69,7 @@ export const providers: Provider[] = [
     rating: 4.6,
     priceTag: "$$",
     avgPrice: 450,
-    dealTag: "דיל בלעדי של Done - 15% הנחה",
+    dealTag: "דיל בלעדי של Hoppa - 15% הנחה",
     description: "ניקיון יסודי לפני/אחרי מעבר, כולל חלונות וארונות.",
     phone: "0501112233",
     logoEmoji: "🧽",

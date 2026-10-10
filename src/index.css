@@ -64,3 +64,10 @@ button {
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
+
+/* מצב דמו: מפנה מקום לפאנל הניווט בין המסכים במסכים רחבים */
+@media (min-width: 1280px) {
+  body.demo-nav {
+    padding-left: 18rem;
+  }
+}
